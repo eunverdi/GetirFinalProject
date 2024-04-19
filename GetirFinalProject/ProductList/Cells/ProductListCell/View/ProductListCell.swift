@@ -29,57 +29,11 @@ final class ProductListCell: UICollectionViewCell {
         }
     }
     
-    private let decrementButton: UIButton = {
-        let decrementButton = UIButton(type: .system)
-        let decrementButtonImage = UIImage(named: "trashButtonIcon")
-        decrementButton.setImage(decrementButtonImage, for: .normal)
-        decrementButton.tintColor = Constants.Colors.appMainColor
-        decrementButton.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
-        decrementButton.layer.cornerRadius = 10
-        decrementButton.tag = 1
-        decrementButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-        return decrementButton
-    }()
-    
-    private let incrementButton: UIButton = {
-        let incrementButton = UIButton(type: .system)
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
-        let incrementButtonImage = UIImage(named: "plusButtonIcon")
-        incrementButton.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
-        incrementButton.setImage(incrementButtonImage, for: .normal)
-        incrementButton.backgroundColor = .white
-        incrementButton.tintColor = Constants.Colors.appMainColor
-        incrementButton.layer.cornerRadius = 10
-        incrementButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-        return incrementButton
-    }()
-    
-    private let countLabel: UILabel = {
-        let countLabel = UILabel()
-        countLabel.text = "0"
-        countLabel.textAlignment = .center
-        countLabel.backgroundColor = Constants.Colors.appMainColor
-        countLabel.font = UIFont(name: Constants.Fonts.openSansBold, size: 12)
-        countLabel.textColor = .white
-        return countLabel
-    }()
-    
-    private let stepperButtonView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.isHidden = false
-        stackView.axis = .vertical
-        stackView.layer.cornerRadius = 10
-        stackView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-        stackView.distribution = .fillEqually
-        stackView.backgroundColor = .white
-        stackView.layer.shadowColor = UIColor.black.cgColor
-        stackView.layer.shadowOpacity = 0.10
-        stackView.layer.zPosition = 1
-        stackView.layer.shadowOffset = CGSize(width: 0, height: -1)
-        stackView.layer.shadowRadius = 10
-        stackView.layer.masksToBounds = false
-        return stackView
+    private lazy var expandableButtonView: ExpandableButtonView = {
+        let view = ExpandableButtonView()
+        view.layer.zPosition = 1
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private let productNameLabel: UILabel = {
@@ -160,28 +114,14 @@ final class ProductListCell: UICollectionViewCell {
     
     @objc private func addTapped() {
         presenter?.addButtonTapped()
-        heightConstraint?.isActive = false
-        heightConstraint = stepperButtonView.heightAnchor.constraint(equalToConstant: 96)
-        heightConstraint?.isActive = true
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.stepperButtonView.addArrangedSubview(self.countLabel)
-            self.stepperButtonView.addArrangedSubview(self.decrementButton)
-            self.stepperButtonView.layoutIfNeeded()
-        })
     }
     
     @objc private func deleteTapped() {
         presenter?.deleteButtonTapped()
     }
 
-    var heightConstraint: NSLayoutConstraint?
-
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        heightConstraint = stepperButtonView.heightAnchor.constraint(equalToConstant: 32)
-        heightConstraint?.isActive = true
     }
     
     override func prepareForReuse() {
@@ -206,11 +146,7 @@ extension ProductListCell: ProductListCellProtocol {
         mainStackView.addArrangedSubview(labelsStackView)
         
         addSubview(mainStackView)
-        
-        stepperButtonView.addArrangedSubview(incrementButton)
-//        stepperButtonView.addArrangedSubview(countLabel)
-//        stepperButtonView.addArrangedSubview(decrementButton)
-        addSubview(stepperButtonView)
+        addSubview(expandableButtonView)
 
         setConstraints()
     }
@@ -256,9 +192,9 @@ extension ProductListCell {
             
             productImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
             
-            stepperButtonView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -3),
-            stepperButtonView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            stepperButtonView.widthAnchor.constraint(equalToConstant: 32),
+            expandableButtonView.widthAnchor.constraint(equalToConstant: 32),
+            expandableButtonView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            expandableButtonView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -3),
         ])
     }
 }
