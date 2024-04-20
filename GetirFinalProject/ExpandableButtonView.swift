@@ -7,9 +7,34 @@
 
 import UIKit
 
+protocol ExpandableButtonViewProtocol: AnyObject {
+    func addProductToBasket()
+    func deleteProductFromBasket()
+    func updateProductCount(count: String)
+}
+
 final class ExpandableButtonView: UIView {
-    
-    var isExpanded: Bool = false
+    weak var delegate: ExpandableButtonViewProtocol?
+    var countLabelText: String = "0"
+    var isExpanded: Bool = false {
+        didSet {
+            if isExpanded {
+                UIView.animate(
+                    withDuration: 0.3, delay: 0, options: .curveEaseIn,
+                    animations: {
+                        self.expandedStackView.subviews.forEach({ $0.isHidden = !$0.isHidden })
+                        self.expandedStackView.isHidden = !self.expandedStackView.isHidden
+                        let isExpandedStackViewHidden = self.expandedStackView.isHidden
+                        if isExpandedStackViewHidden {
+                            self.addButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+                        } else {
+                            self.addButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+                        }
+                    }
+                )
+            }
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,7 +67,7 @@ final class ExpandableButtonView: UIView {
     lazy var countLabel: UILabel = {
         let countLabel = UILabel()
         countLabel.translatesAutoresizingMaskIntoConstraints = false
-        countLabel.text = "0"
+        countLabel.text = countLabelText
         countLabel.textAlignment = .center
         countLabel.backgroundColor = Constants.Colors.appMainColor
         countLabel.font = UIFont(name: Constants.Fonts.openSansBold, size: 12)!
@@ -117,7 +142,6 @@ extension ExpandableButtonView {
     @objc private func addButtonPressed(_ sender: UIButton) {
         
         var countLabelValue = Int(self.countLabel.text!)
-        
         if countLabelValue! >= 1 {
             self.decrementButton.setImage(UIImage(named: "minusButtonIcon"), for: .normal)
             self.decrementButton.tag = 2
@@ -137,11 +161,12 @@ extension ExpandableButtonView {
                     }
                 }
             )
+            delegate?.addProductToBasket()
         }
         
         countLabelValue! += 1
         self.countLabel.text = "\(countLabelValue!)"
-        
+        delegate?.updateProductCount(count: "\(countLabelValue!)")
     }
     
     @objc private func decrementButtonPressed(_ sender: UIButton) {
@@ -159,6 +184,7 @@ extension ExpandableButtonView {
                     }
                 }
             )
+            delegate?.deleteProductFromBasket()
             defer {
                 self.countLabel.text = "0"
             }
@@ -166,6 +192,7 @@ extension ExpandableButtonView {
             var countLabelValue = Int(self.countLabel.text!)
             countLabelValue! -= 1
             self.countLabel.text = "\(countLabelValue!)"
+            delegate?.updateProductCount(count: "\(countLabelValue!)")
             
             if countLabelValue! == 1 {
                 self.decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)

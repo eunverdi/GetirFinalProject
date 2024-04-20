@@ -11,6 +11,7 @@ protocol ProductListCellPresenterProtocol: AnyObject {
     func loadCell()
     func addButtonTapped()
     func deleteButtonTapped()
+    func updateCount(count: String)
 }
 
 final class ProductListCellPresenter {
@@ -26,6 +27,11 @@ final class ProductListCellPresenter {
 }
 
 extension ProductListCellPresenter: ProductListCellPresenterProtocol {
+    func updateCount(count: String) {
+        presentation.currentAmount = count
+        interactor?.updateProductCount(product: presentation)
+    }
+    
     func deleteButtonTapped() {
         interactor?.deleteProductToCart(product: presentation)
     }
@@ -48,6 +54,7 @@ extension ProductListCellPresenter {
     private func configureAddedCartStatus() {
         guard let productID = presentation.id else { return }
         interactor?.checkIsAddedToCart(productID: productID)
+        interactor?.checkProductCount(productID: productID)
     }
     
     private func configureProductName() {
@@ -57,7 +64,7 @@ extension ProductListCellPresenter {
     
     private func configureProductPrice() {
         guard let productPrice = presentation.price else { return }
-        cell?.setProductPriceLabel(text: productPrice)
+        cell?.setProductPriceLabel(price: productPrice)
     }
     
     private func configureProductAttribute() {
@@ -73,6 +80,10 @@ extension ProductListCellPresenter {
 }
 
 extension ProductListCellPresenter: ProductListCellInteractorOutputProtocol {
+    func productCountFromCart(count: String) {
+        cell?.configureAddedProductsCount(count: count)
+    }
+    
     func deletedProductToCart() {
         cell?.configureDeletedProductsView()
     }

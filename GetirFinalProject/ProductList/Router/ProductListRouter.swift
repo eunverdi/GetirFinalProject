@@ -9,7 +9,7 @@ import Foundation
 
 enum ProductListRoutes {
     case detail(presentation: ProductPresentation)
-    case basket
+    case cart
 }
 
 protocol ProductListRouterProtocol: AnyObject {
@@ -38,9 +38,11 @@ extension ProductListRouter: ProductListRouterProtocol {
     func navigate(_ route: ProductListRoutes) {
         switch route {
         case .detail(let presentation):
-            let productDetail = ProductDetailRouter.createModule(with: presentation)
-            viewController?.navigationController?.pushViewController(productDetail, animated: true)
-        case .basket: break
+            let productDetailVC = ProductDetailRouter.createModule(with: presentation)
+            viewController?.navigationController?.pushViewController(productDetailVC, animated: true)
+        case .cart:
+            let cartVC = TestController()
+            viewController?.navigationController?.pushViewController(cartVC, animated: true)
         }
     }
 }

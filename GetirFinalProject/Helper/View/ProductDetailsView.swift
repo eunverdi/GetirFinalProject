@@ -10,7 +10,7 @@ import UIKit
 protocol ProductDetailsViewProtocol: AnyObject {
     var presenter: ProductDetailsViewPresenter? { get set }
     func configureProductNameLabel(_ text: String)
-    func configureProductPriceLabel(_ text: String)
+    func configureProductPriceLabel(_ price: Double)
     func configureProductAttributeLabel(_ text: String)
     func configureProductImageView(with url: URL)
 }
@@ -107,8 +107,9 @@ extension ProductDetailsView: ProductDetailsViewProtocol {
         productNameLabel.text = text
     }
     
-    func configureProductPriceLabel(_ text: String) {
-        productPriceLabel.text = text
+    func configureProductPriceLabel(_ price: Double) {
+        let formattedPrice = String(format: "%.2f", price)
+        productPriceLabel.text = "₺\(formattedPrice)"
     }
     
     func configureProductAttributeLabel(_ text: String) {

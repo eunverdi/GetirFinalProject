@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-private enum Identifier: String {
+fileprivate enum Identifier: String {
     case sectionHeaderIdentifier = "HeaderView"
 }
 
@@ -18,15 +18,14 @@ enum Section: Int, CaseIterable {
 }
 
 protocol ProductListViewControllerProtocol: AnyObject {
-    func configureCollectionView()
-    func configureNavigationBar()
-    func configureSuperview()
     func reloadData()
+    func prepareViewDidLoad()
 }
 
 final class ProductListViewController: UIViewController {
     var presenter: ProductListPresenterProtocol?
     private var collectionView: UICollectionView? = nil
+    private let cartButton = CartButtonView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +34,11 @@ final class ProductListViewController: UIViewController {
 }
 
 extension ProductListViewController: ProductListViewControllerProtocol {
-    func configureSuperview() {
-        view.backgroundColor = .systemBackground
+    func prepareViewDidLoad() {
+        setDelegates()
+        configureSuperview()
+        configureNavigationBar()
+        configureCollectionView()
     }
     
     func reloadData() {
@@ -44,19 +46,26 @@ extension ProductListViewController: ProductListViewControllerProtocol {
             self.collectionView?.reloadData()
         }
     }
+}
+
+extension ProductListViewController {
+    private func setDelegates() {
+        cartButton.delegate = self
+    }
     
-    func configureNavigationBar() {
+    private func configureSuperview() {
+        view.backgroundColor = .systemBackground
+    }
+    
+    private func configureNavigationBar() {
         navigationItem.title = Constants.NavigationItem.productListTitle
         let font = UIFont(name: Constants.Fonts.openSansBold, size: 14)
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: font]
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "text", style: .done, target: self, action: #selector(testtapped))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "text", style: .done, target: self, action: #selector(testtapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cartButton)
     }
     
-    @objc func testtapped() {
-        navigationController?.pushViewController(TestController(), animated: true)
-    }
-    
-    func configureCollectionView() {
+    private func configureCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         
         guard let collectionView = collectionView else { return }
@@ -83,7 +92,7 @@ extension ProductListViewController: UICollectionViewDelegate {
         guard let section = Section(rawValue: indexPath.section) else {
             fatalError("")
         }
-        presenter?.goToProductDetail(at: indexPath, section: section)
+        presenter?.navigateToProductDetail(at: indexPath, section: section)
     }
 }
 
@@ -188,5 +197,11 @@ extension ProductListViewController {
                   elementKind: Identifier.sectionHeaderIdentifier.rawValue, alignment: .top),
         ]
         return section
+    }
+}
+
+extension ProductListViewController: CartButtonViewProtocol {
+    func cartButtonPressed() {
+        presenter?.navigateToCart()
     }
 }

@@ -62,7 +62,11 @@ extension TestController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = productsInCart[indexPath.row].name
+        cell.textLabel?.numberOfLines = 0
+        let amount = Int(productsInCart[indexPath.row].currentAmount!)
+        let price = Int(productsInCart[indexPath.row].price)
+        let final = Double(amount! * price)
+        cell.textLabel?.text = "\(productsInCart[indexPath.row].name) - \(productsInCart[indexPath.row].currentAmount) - currentPrie = \(final)"
         return cell
     }
 }

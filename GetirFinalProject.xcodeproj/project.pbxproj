@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		47003A162BD301FD008B937A /* ExpandableButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47003A152BD301FD008B937A /* ExpandableButtonView.swift */; };
+		47003A182BD3D2FE008B937A /* CartButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47003A172BD3D2FE008B937A /* CartButtonView.swift */; };
 		47180C2E2BCC75D000078B37 /* ProductDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C2D2BCC75D000078B37 /* ProductDetailViewController.swift */; };
 		47180C302BCC762800078B37 /* ProductDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C2F2BCC762800078B37 /* ProductDetailInteractor.swift */; };
 		47180C322BCC766C00078B37 /* ProductDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C312BCC766C00078B37 /* ProductDetailPresenter.swift */; };
@@ -18,7 +19,7 @@
 		47180C3C2BCDCEB300078B37 /* CartStatusContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C3B2BCDCEB200078B37 /* CartStatusContainerView.swift */; };
 		47180C422BCEDEF300078B37 /* ProductListCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C412BCEDEF300078B37 /* ProductListCellPresenter.swift */; };
 		47180C442BCEE0A500078B37 /* ProductListCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C432BCEE0A500078B37 /* ProductListCellBuilder.swift */; };
-		47180C462BCEE6C800078B37 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C452BCEE6C800078B37 /* CoreDataManager.swift */; };
+		47180C462BCEE6C800078B37 /* ProductRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C452BCEE6C800078B37 /* ProductRepository.swift */; };
 		47180C492BCEE74A00078B37 /* GetirFinalProject.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 47180C472BCEE74A00078B37 /* GetirFinalProject.xcdatamodeld */; };
 		47180C4D2BCEFC6C00078B37 /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C4C2BCEFC6C00078B37 /* TestController.swift */; };
 		47180C502BCF192B00078B37 /* ProductListCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47180C4F2BCF192B00078B37 /* ProductListCellInteractor.swift */; };
@@ -69,6 +70,7 @@
 
 /* Begin PBXFileReference section */
 		47003A152BD301FD008B937A /* ExpandableButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableButtonView.swift; sourceTree = "<group>"; };
+		47003A172BD3D2FE008B937A /* CartButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartButtonView.swift; sourceTree = "<group>"; };
 		47180C2D2BCC75D000078B37 /* ProductDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewController.swift; sourceTree = "<group>"; };
 		47180C2F2BCC762800078B37 /* ProductDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailInteractor.swift; sourceTree = "<group>"; };
 		47180C312BCC766C00078B37 /* ProductDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailPresenter.swift; sourceTree = "<group>"; };
@@ -79,7 +81,7 @@
 		47180C3B2BCDCEB200078B37 /* CartStatusContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartStatusContainerView.swift; sourceTree = "<group>"; };
 		47180C412BCEDEF300078B37 /* ProductListCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListCellPresenter.swift; sourceTree = "<group>"; };
 		47180C432BCEE0A500078B37 /* ProductListCellBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListCellBuilder.swift; sourceTree = "<group>"; };
-		47180C452BCEE6C800078B37 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		47180C452BCEE6C800078B37 /* ProductRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRepository.swift; sourceTree = "<group>"; };
 		47180C482BCEE74A00078B37 /* ProductInCart.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ProductInCart.xcdatamodel; sourceTree = "<group>"; };
 		47180C4C2BCEFC6C00078B37 /* TestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
 		47180C4F2BCF192B00078B37 /* ProductListCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListCellInteractor.swift; sourceTree = "<group>"; };
@@ -207,7 +209,7 @@
 			children = (
 				476D78FC2BCB70A000C7AA57 /* View */,
 				476D78FA2BCB706B00C7AA57 /* Constants */,
-				47180C452BCEE6C800078B37 /* CoreDataManager.swift */,
+				47180C452BCEE6C800078B37 /* ProductRepository.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -355,6 +357,7 @@
 				47180C3B2BCDCEB200078B37 /* CartStatusContainerView.swift */,
 				47180C472BCEE74A00078B37 /* GetirFinalProject.xcdatamodeld */,
 				47003A152BD301FD008B937A /* ExpandableButtonView.swift */,
+				47003A172BD3D2FE008B937A /* CartButtonView.swift */,
 			);
 			path = GetirFinalProject;
 			sourceTree = "<group>";
@@ -587,6 +590,7 @@
 				47180C322BCC766C00078B37 /* ProductDetailPresenter.swift in Sources */,
 				47180C382BCC943300078B37 /* ProductDetailsViewPresenter.swift in Sources */,
 				47180C442BCEE0A500078B37 /* ProductListCellBuilder.swift in Sources */,
+				47003A182BD3D2FE008B937A /* CartButtonView.swift in Sources */,
 				476D78C72BC99CE600C7AA57 /* Extension+UINavigationController.swift in Sources */,
 				476D78D02BC9EEF300C7AA57 /* ProductListCell.swift in Sources */,
 				47180C302BCC762800078B37 /* ProductDetailInteractor.swift in Sources */,
@@ -602,7 +606,7 @@
 				47E670FC2BC43E8600517B0D /* ProductListPresenter.swift in Sources */,
 				47003A162BD301FD008B937A /* ExpandableButtonView.swift in Sources */,
 				47180C502BCF192B00078B37 /* ProductListCellInteractor.swift in Sources */,
-				47180C462BCEE6C800078B37 /* CoreDataManager.swift in Sources */,
+				47180C462BCEE6C800078B37 /* ProductRepository.swift in Sources */,
 				47180C3C2BCDCEB300078B37 /* CartStatusContainerView.swift in Sources */,
 				47E670A22BC42A4A00517B0D /* SceneDelegate.swift in Sources */,
 				47180C3A2BCC95E400078B37 /* ProductDetailsViewBuilder.swift in Sources */,

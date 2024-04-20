@@ -11,12 +11,13 @@ import SDWebImage
 protocol ProductListCellProtocol: AnyObject {
     func setup()
     func setProductNameLabel(text: String)
-    func setProductPriceLabel(text: String)
+    func setProductPriceLabel(price: Double)
     func setProductAttributeLabel(text: String)
     func setProductImageView(url: URL)
     func configureProductAddedCartStatus(isAdded: Bool)
     func configureDeletedProductsView()
     func configureAddedProductsView()
+    func configureAddedProductsCount(count: String)
 }
 
 final class ProductListCell: UICollectionViewCell {
@@ -31,53 +32,36 @@ final class ProductListCell: UICollectionViewCell {
     
     private lazy var expandableButtonView: ExpandableButtonView = {
         let view = ExpandableButtonView()
-        view.layer.zPosition = 1
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self
+        view.layer.zPosition = 1
         return view
     }()
     
     private let productNameLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: Constants.Fonts.openSansSemibold, size: 12)
         label.textColor = .black
         label.numberOfLines = 2
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let addButton: UIButton = {
-        let label = UIButton(type: .system)
-        label.setTitle("Ekle", for: .normal)
-        label.backgroundColor = .green
-        label.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let deleteButton: UIButton = {
-        let label = UIButton(type: .system)
-        label.setTitle("Sil", for: .normal)
-        label.backgroundColor = .red
-        label.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let productPriceLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: Constants.Fonts.openSansBold, size: 14)
         label.textColor = Constants.Colors.appMainColor
         label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let productAttributeLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: Constants.Fonts.openSansSemibold, size: 12)
         label.textColor = .lightGray
         label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -93,27 +77,30 @@ final class ProductListCell: UICollectionViewCell {
 
     private let labelsStackView: UIStackView = {
         let labelsStackView = UIStackView()
+        labelsStackView.translatesAutoresizingMaskIntoConstraints = false
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .fill
         labelsStackView.distribution = .fill
         labelsStackView.spacing = 1
-        labelsStackView.translatesAutoresizingMaskIntoConstraints = false
         return labelsStackView
     }()
     
     private let mainStackView: UIStackView = {
         let mainStackView = UIStackView()
+        mainStackView.translatesAutoresizingMaskIntoConstraints = false
         mainStackView.axis = .vertical
         mainStackView.alignment = .fill
         mainStackView.distribution = .fill
         mainStackView.spacing = 2
-        mainStackView.translatesAutoresizingMaskIntoConstraints = false
         return mainStackView
     }()
     
-    
     @objc private func addTapped() {
         presenter?.addButtonTapped()
+    }
+    
+    private func updateCount(count: String) {
+        presenter?.updateCount(count: count)
     }
     
     @objc private func deleteTapped() {
@@ -131,10 +118,18 @@ final class ProductListCell: UICollectionViewCell {
         productImageView.image = nil
         productImageView.layer.borderColor = Constants.Colors.productImageBorderColor?.cgColor
         productImageView.layer.sublayers?.removeAll()
+        expandableButtonView.isExpanded = false
     }
 }
 
 extension ProductListCell: ProductListCellProtocol {
+    func configureAddedProductsCount(count: String) {
+        let value = Int(count)!
+        if value >= 1 {
+            self.expandableButtonView.countLabelText = "\(value)"
+        }
+    }
+    
     func setup() {
         backgroundColor = .white
         
@@ -154,6 +149,7 @@ extension ProductListCell: ProductListCellProtocol {
     func configureProductAddedCartStatus(isAdded: Bool) {
         if isAdded {
             self.productImageView.layer.borderColor = Constants.Colors.appMainColor?.cgColor
+            self.expandableButtonView.isExpanded = true
         }
     }
     
@@ -161,8 +157,9 @@ extension ProductListCell: ProductListCellProtocol {
         productNameLabel.text = text
     }
     
-    func setProductPriceLabel(text: String) {
-        productPriceLabel.text = text
+    func setProductPriceLabel(price: Double) {
+        let formattedPrice = String(format: "%.2f", price)
+        productPriceLabel.text = "₺\(formattedPrice)"
     }
     
     func setProductAttributeLabel(text: String) {
@@ -215,5 +212,21 @@ extension ProductListCell {
         
         borderLayer.add(animation, forKey: "line")
         productImageView.layer.addSublayer(borderLayer)
+    }
+}
+
+extension ProductListCell: ExpandableButtonViewProtocol {
+    func updateProductCount(count: String) {
+        updateCount(count: count)
+    }
+    
+    func addProductToBasket() {
+        print("added")
+        addTapped()
+    }
+    
+    func deleteProductFromBasket() {
+        print("deleted")
+        deleteTapped()
     }
 }

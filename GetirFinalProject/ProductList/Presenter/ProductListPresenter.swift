@@ -9,7 +9,8 @@ import UIKit
 
 protocol ProductListPresenterProtocol: AnyObject {
     func viewDidLoad()
-    func goToProductDetail(at indexPath: IndexPath, section: Section)
+    func navigateToProductDetail(at indexPath: IndexPath, section: Section)
+    func navigateToCart()
     func getVListProductPresentation(at indexPath: IndexPath) -> ProductPresentation
     func getHListProductPresentation(at indexPath: IndexPath) -> ProductPresentation
     func numberOfRowsInSectionHorizontalListProducts() -> Int
@@ -51,7 +52,7 @@ extension ProductListPresenter: ProductListPresenterProtocol {
         verticalListProducts.count
     }
     
-    func goToProductDetail(at indexPath: IndexPath, section: Section) {
+    func navigateToProductDetail(at indexPath: IndexPath, section: Section) {
         switch section {
         case .horizontalListProducts:
             router?.navigate(.detail(presentation: horizontalListProducts[indexPath.item]))
@@ -60,10 +61,13 @@ extension ProductListPresenter: ProductListPresenterProtocol {
         }
     }
     
+    func navigateToCart() {
+        router?.navigate(.cart)
+    }
+    
+    
     func viewDidLoad() {
-        view?.configureCollectionView()
-        view?.configureNavigationBar()
-        view?.configureSuperview()
+        view?.prepareViewDidLoad()
         interactor?.fetchProducts()
     }
 }
@@ -98,7 +102,7 @@ extension ProductListPresenter {
             return ProductPresentation(id: product.id,
                                        name: product.name,
                                        attribute: " ",
-                                       price: product.priceText,
+                                       price: product.price,
                                        imageURL: product.imageURL,
                                        currentAmount: "0")
         }
@@ -111,7 +115,7 @@ extension ProductListPresenter {
             return ProductPresentation(id: product.id,
                                        name: product.name,
                                        attribute: product.attribute,
-                                       price: product.priceText,
+                                       price: product.price,
                                        imageURL: product.imageURL,
                                        currentAmount: "0")
         }

@@ -44,7 +44,7 @@ struct ProductPresentation {
     let id: String?
     let name: String?
     let attribute: String?
-    let price: String?
+    let price: Double?
     let imageURL: String?
     var currentAmount: String?
 }
