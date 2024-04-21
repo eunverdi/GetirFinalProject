@@ -10,7 +10,7 @@ import UIKit
 protocol ExpandableButtonViewProtocol: AnyObject {
     func addProductToBasket()
     func deleteProductFromBasket()
-    func updateProductCount(count: String)
+    func updateProductCount(with count: String)
 }
 
 final class ExpandableButtonView: UIView {
@@ -32,6 +32,11 @@ final class ExpandableButtonView: UIView {
                         }
                     }
                 )
+                var countLabelValue = Int(self.countLabel.text!)
+                if countLabelValue! >= 1 {
+                    self.decrementButton.setImage(UIImage(named: "minusButtonIcon"), for: .normal)
+                    self.decrementButton.tag = 2
+                }
             }
         }
     }
@@ -166,7 +171,7 @@ extension ExpandableButtonView {
         
         countLabelValue! += 1
         self.countLabel.text = "\(countLabelValue!)"
-        delegate?.updateProductCount(count: "\(countLabelValue!)")
+        delegate?.updateProductCount(with: "\(countLabelValue!)")
     }
     
     @objc private func decrementButtonPressed(_ sender: UIButton) {
@@ -192,7 +197,7 @@ extension ExpandableButtonView {
             var countLabelValue = Int(self.countLabel.text!)
             countLabelValue! -= 1
             self.countLabel.text = "\(countLabelValue!)"
-            delegate?.updateProductCount(count: "\(countLabelValue!)")
+            delegate?.updateProductCount(with: "\(countLabelValue!)")
             
             if countLabelValue! == 1 {
                 self.decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)

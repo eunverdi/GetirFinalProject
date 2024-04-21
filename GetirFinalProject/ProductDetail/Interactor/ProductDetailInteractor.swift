@@ -8,12 +8,14 @@
 import Foundation
 
 protocol ProductDetailInteractorOutputProtocol: AnyObject {
-//    func fetchVerticalListProductsOutputs(_ result: Result<[VListProductModel], Error>)
-//    func fetchHorizontalListProductsOutputs(_ result: Result<[HListProductsModel], Error>)
+    func productCountOutput(productCount: String)
 }
 
 protocol ProductDetailInteractorProtocol {
-    func fetchProducts()
+    func checkIsAddedToCart(productID: String)
+    func updateProductCount(product: ProductPresentation)
+    func addProductToCart(productID: String)
+    func deleteProductFromCart(productID: String)
 }
 
 final class ProductDetailInteractor {
@@ -23,7 +25,35 @@ final class ProductDetailInteractor {
 
 
 extension ProductDetailInteractor: ProductDetailInteractorProtocol {
-    func fetchProducts() {
+    func updateProductCount(product: ProductPresentation) {
+        ProductRepository.shared.updateProductAmount(with: product)
+    }
+    
+    func addProductToCart(productID: String) {
         //
+    }
+    
+    func deleteProductFromCart(productID: String) {
+        //
+    }
+    
+    func checkIsAddedToCart(productID: String) {
+        ProductRepository.shared.checkIsAddedToCart(with: productID) { result in
+            switch result {
+            case .success(let isAdded):
+                if isAdded {
+                    ProductRepository.shared.getProductCount(with: productID) { result in
+                        switch result {
+                        case .success(let productCount):
+                            self.output?.productCountOutput(productCount: productCount)
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
 }

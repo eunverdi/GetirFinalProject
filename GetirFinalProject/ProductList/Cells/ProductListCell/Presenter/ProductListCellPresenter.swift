@@ -11,7 +11,7 @@ protocol ProductListCellPresenterProtocol: AnyObject {
     func loadCell()
     func addButtonTapped()
     func deleteButtonTapped()
-    func updateCount(count: String)
+    func updateCount(with count: String)
 }
 
 final class ProductListCellPresenter {
@@ -27,7 +27,7 @@ final class ProductListCellPresenter {
 }
 
 extension ProductListCellPresenter: ProductListCellPresenterProtocol {
-    func updateCount(count: String) {
+    func updateCount(with count: String) {
         presentation.currentAmount = count
         interactor?.updateProductCount(product: presentation)
     }

@@ -8,7 +8,10 @@
 import UIKit
 
 protocol CartStatusProtocol: AnyObject {
-    
+    func updateProductCount(with count: String)
+    func addProductToCart()
+    func deleteProductFromCart()
+    func cartButtonVisibleStatus(isHidden: Bool)
 }
 
 final class CartStatusContainerView: UIView {
@@ -86,10 +89,28 @@ final class CartStatusContainerView: UIView {
         return stackView
     }()
     
+    func configureComponents(productCount: String) {
+        let value = Int(productCount)
+        
+        if value! >= 1 {
+            self.addToCartButton.isHidden = true
+            self.stepperButtonView.isHidden = false
+            if value! == 1 {
+                self.decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)
+            } else {
+                self.decrementButton.setImage(UIImage(systemName: "minus")?.withTintColor(Constants.Colors.appMainColor!, renderingMode: .alwaysTemplate), for: .normal)
+            }
+            self.decrementButton.tintColor = Constants.Colors.appMainColor
+//            self.decrementButton.tag = 3
+            self.countLabel.text = productCount
+        }
+    }
+    
     @objc func incrementButtonPressed() {
         if var value = Int(countLabel.text ?? "1") {
             value += 1
             countLabel.text = "\(value)"
+            delegate?.updateProductCount(with: "\(value)")
             
             if value != 1 {
                 decrementButton.setImage(UIImage(systemName: "minus")?.withTintColor(Constants.Colors.appMainColor!, renderingMode: .alwaysTemplate), for: .normal)
@@ -105,6 +126,7 @@ final class CartStatusContainerView: UIView {
         if var value = Int(countLabel.text ?? "1") {
             value -= 1
             countLabel.text = "\(value)"
+            delegate?.updateProductCount(with: "\(value)")
             
             if decrementButton.tag == 2 {
                 activityIndicator.isHidden = true
@@ -119,15 +141,18 @@ final class CartStatusContainerView: UIView {
                 addToCartButton.setTitle("Sepete Ekle", for: .normal)
                 addToCartButton.isHidden = false
                 stepperButtonView.isHidden = true
+                activityIndicator.isHidden = true
+                activityIndicator.stopAnimating()
                 countLabel.text = "1"
                 decrementButton.tag = 1
+                delegate?.deleteProductFromCart()
             }
             
             if value != 1 {
                 decrementButton.setImage(UIImage(systemName: "minus")?.withTintColor(Constants.Colors.appMainColor!, renderingMode: .alwaysTemplate), for: .normal)
                 decrementButton.tintColor = Constants.Colors.appMainColor
             } else if value == 1 {
-                decrementButton.tag = 2
+                decrementButton.tag = 3
                 decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)
                 decrementButton.tintColor = Constants.Colors.appMainColor
             }
@@ -144,8 +169,10 @@ final class CartStatusContainerView: UIView {
             self.stepperButtonView.isHidden = false
             self.decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)
             self.decrementButton.tintColor = Constants.Colors.appMainColor
-            self.decrementButton.tag = 3
+//            self.decrementButton.tag = 3
         }
+        
+        delegate?.addProductToCart()
     }
     
     override init(frame: CGRect) {

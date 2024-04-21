@@ -103,7 +103,7 @@ extension ProductListPresenter {
                                        name: product.name,
                                        attribute: " ",
                                        price: product.price,
-                                       imageURL: product.imageURL,
+                                       imageURL: product.imageURL ?? product.squareThumbnailURL,
                                        currentAmount: "0")
         }
     }

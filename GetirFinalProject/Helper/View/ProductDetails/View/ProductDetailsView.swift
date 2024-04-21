@@ -117,6 +117,6 @@ extension ProductDetailsView: ProductDetailsViewProtocol {
     }
     
     func configureProductImageView(with url: URL) {
-        productImageView.sd_setImage(with: url)
+        productImageView.kf.setImage(with: url)
     }
 }

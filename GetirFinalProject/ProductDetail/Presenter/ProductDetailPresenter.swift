@@ -10,6 +10,9 @@ import Foundation
 protocol ProductDetailPresenterProtocol: AnyObject {
     func viewDidLoad(detailsView: ProductDetailsView)
     func backButtonPressed()
+    func updateProductCount(with count: String) 
+    func addProductToCart()
+    func deleteProductFromCart()
 }
 
 final class ProductDetailPresenter {
@@ -31,14 +34,36 @@ final class ProductDetailPresenter {
 }
 
 extension ProductDetailPresenter: ProductDetailPresenterProtocol {
+    func updateProductCount(with count: String) {
+        guard var presentation = presentation else { return }
+        presentation.currentAmount = count
+        interactor?.updateProductCount(product: presentation)
+    }
+    
+    func addProductToCart() {
+        guard let presentation = presentation else { return }
+        ProductRepository.shared.createProduct(with: presentation)
+    }
+    
+    func deleteProductFromCart() {
+        guard let presentation = presentation,
+              let productID = presentation.id else { return }
+        ProductRepository.shared.deleteProduct(with: productID) { error in
+            print("error while deleted products from cart \(error)")
+        }
+    }
+    
     func viewDidLoad(detailsView: ProductDetailsView) {
-        guard let presentation = presentation else {
-            return //MARK: error yaz
+        guard let presentation = presentation,
+              let productID = presentation.id else {
+            return
         }
         ProductDetailsViewBuilder.createView(detailsView, presentation: presentation)
         view?.configureSubviews()
         view?.configureNavigationBar()
         view?.configureSuperview()
+        view?.setDelegates()
+        interactor?.checkIsAddedToCart(productID: productID)
     }
     
     func backButtonPressed() {
@@ -46,4 +71,8 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
     }
 }
 
-extension ProductDetailPresenter: ProductDetailInteractorOutputProtocol {}
+extension ProductDetailPresenter: ProductDetailInteractorOutputProtocol {
+    func productCountOutput(productCount: String) {
+        view?.configureProductStatus(productCount: productCount)
+    }
+}

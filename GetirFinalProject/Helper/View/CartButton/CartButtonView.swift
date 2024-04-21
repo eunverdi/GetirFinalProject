@@ -13,6 +13,7 @@ protocol CartButtonViewProtocol: AnyObject {
 
 class CartButtonView: UIView {
     
+    static let shared = CartButtonView()
     weak var delegate: CartButtonViewProtocol?
     
     let imageView: UIImageView = {
@@ -52,7 +53,7 @@ class CartButtonView: UIView {
         return view
     }()
     
-    override init(frame: CGRect) {
+    private override init(frame: CGRect) {
         super.init(frame: frame)
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateTotalCost(_:)), name: NSNotification.Name("TotalCostUpdated"), object: nil)
@@ -81,6 +82,8 @@ class CartButtonView: UIView {
             widthAnchor.constraint(equalToConstant: 90),
             heightAnchor.constraint(equalToConstant: 35)
         ])
+        
+        ProductRepository.shared.calculateTotalCost()
     }
     
     @objc func updateTotalCost(_ notification: Notification) {

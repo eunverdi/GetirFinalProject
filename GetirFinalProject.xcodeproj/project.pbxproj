@@ -31,8 +31,7 @@
 		476D78D62BCB44D800C7AA57 /* ProductListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D78CF2BC9EEF300C7AA57 /* ProductListCell.swift */; };
 		476D78D82BCB4FBF00C7AA57 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D78D72BCB4FBF00C7AA57 /* NetworkManager.swift */; };
 		476D78DA2BCB506200C7AA57 /* APIEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D78D92BCB506200C7AA57 /* APIEndpoint.swift */; };
-		476D78E62BCB5E4900C7AA57 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 476D78E52BCB5E4900C7AA57 /* SDWebImage */; };
-		476D78E82BCB5E4900C7AA57 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 476D78E72BCB5E4900C7AA57 /* SDWebImageMapKit */; };
+		47CE79FE2BD58437005ABD27 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 47CE79FD2BD58437005ABD27 /* Kingfisher */; };
 		47E670A02BC42A4A00517B0D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E6709F2BC42A4A00517B0D /* AppDelegate.swift */; };
 		47E670A22BC42A4A00517B0D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E670A12BC42A4A00517B0D /* SceneDelegate.swift */; };
 		47E670A92BC42A4C00517B0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47E670A82BC42A4C00517B0D /* Assets.xcassets */; };
@@ -119,8 +118,7 @@
 				47E671062BC4474D00517B0D /* CombineMoya in Frameworks */,
 				47E6710C2BC4474D00517B0D /* RxMoya in Frameworks */,
 				47E6710A2BC4474D00517B0D /* ReactiveMoya in Frameworks */,
-				476D78E82BCB5E4900C7AA57 /* SDWebImageMapKit in Frameworks */,
-				476D78E62BCB5E4900C7AA57 /* SDWebImage in Frameworks */,
+				47CE79FE2BD58437005ABD27 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,13 +161,6 @@
 				47180C312BCC766C00078B37 /* ProductDetailPresenter.swift */,
 			);
 			path = Presenter;
-			sourceTree = "<group>";
-		};
-		47180C2B2BCC757D00078B37 /* Entity */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Entity;
 			sourceTree = "<group>";
 		};
 		47180C2C2BCC758200078B37 /* Router */ = {
@@ -286,20 +277,12 @@
 		476D78F82BCB704D00C7AA57 /* ProductDetail */ = {
 			isa = PBXGroup;
 			children = (
-				47180C2C2BCC758200078B37 /* Router */,
-				47180C2B2BCC757D00078B37 /* Entity */,
-				47180C2A2BCC757800078B37 /* Presenter */,
-				47180C292BCC757300078B37 /* Interactor */,
 				47180C282BCC756F00078B37 /* View */,
+				47180C292BCC757300078B37 /* Interactor */,
+				47180C2A2BCC757800078B37 /* Presenter */,
+				47180C2C2BCC758200078B37 /* Router */,
 			);
 			path = ProductDetail;
-			sourceTree = "<group>";
-		};
-		476D78F92BCB705A00C7AA57 /* Basket */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Basket;
 			sourceTree = "<group>";
 		};
 		476D78FA2BCB706B00C7AA57 /* Constants */ = {
@@ -313,14 +296,73 @@
 		476D78FC2BCB70A000C7AA57 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				47CE7A062BD58741005ABD27 /* ExpandableButton */,
+				47CE7A052BD5873A005ABD27 /* CartButton */,
+				47CE7A042BD58730005ABD27 /* CartStatus */,
+				47CE7A002BD586D9005ABD27 /* ProductDetails */,
 				47E670A82BC42A4C00517B0D /* Assets.xcassets */,
 				47E670AA2BC42A4C00517B0D /* LaunchScreen.storyboard */,
-				47180C352BCC92B900078B37 /* ProductDetailsView.swift */,
-				47180C372BCC943300078B37 /* ProductDetailsViewPresenter.swift */,
-				47180C392BCC95E400078B37 /* ProductDetailsViewBuilder.swift */,
 				47180C4C2BCEFC6C00078B37 /* TestController.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		47CE7A002BD586D9005ABD27 /* ProductDetails */ = {
+			isa = PBXGroup;
+			children = (
+				47CE7A012BD586F9005ABD27 /* View */,
+				47CE7A022BD586FF005ABD27 /* Presenter */,
+				47CE7A032BD5870C005ABD27 /* Builder */,
+			);
+			path = ProductDetails;
+			sourceTree = "<group>";
+		};
+		47CE7A012BD586F9005ABD27 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				47180C352BCC92B900078B37 /* ProductDetailsView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		47CE7A022BD586FF005ABD27 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				47180C372BCC943300078B37 /* ProductDetailsViewPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		47CE7A032BD5870C005ABD27 /* Builder */ = {
+			isa = PBXGroup;
+			children = (
+				47180C392BCC95E400078B37 /* ProductDetailsViewBuilder.swift */,
+			);
+			path = Builder;
+			sourceTree = "<group>";
+		};
+		47CE7A042BD58730005ABD27 /* CartStatus */ = {
+			isa = PBXGroup;
+			children = (
+				47180C3B2BCDCEB200078B37 /* CartStatusContainerView.swift */,
+			);
+			path = CartStatus;
+			sourceTree = "<group>";
+		};
+		47CE7A052BD5873A005ABD27 /* CartButton */ = {
+			isa = PBXGroup;
+			children = (
+				47003A172BD3D2FE008B937A /* CartButtonView.swift */,
+			);
+			path = CartButton;
+			sourceTree = "<group>";
+		};
+		47CE7A062BD58741005ABD27 /* ExpandableButton */ = {
+			isa = PBXGroup;
+			children = (
+				47003A152BD301FD008B937A /* ExpandableButtonView.swift */,
+			);
+			path = ExpandableButton;
 			sourceTree = "<group>";
 		};
 		47E670932BC42A4A00517B0D = {
@@ -353,11 +395,7 @@
 				476D78CE2BC9A7AD00C7AA57 /* Helper */,
 				47E670F42BC43E3500517B0D /* ProductList */,
 				476D78F82BCB704D00C7AA57 /* ProductDetail */,
-				476D78F92BCB705A00C7AA57 /* Basket */,
-				47180C3B2BCDCEB200078B37 /* CartStatusContainerView.swift */,
 				47180C472BCEE74A00078B37 /* GetirFinalProject.xcdatamodeld */,
-				47003A152BD301FD008B937A /* ExpandableButtonView.swift */,
-				47003A172BD3D2FE008B937A /* CartButtonView.swift */,
 			);
 			path = GetirFinalProject;
 			sourceTree = "<group>";
@@ -392,12 +430,12 @@
 		47E670F42BC43E3500517B0D /* ProductList */ = {
 			isa = PBXGroup;
 			children = (
-				476D78EF2BCB633600C7AA57 /* Cells */,
 				47E670FD2BC43F0200517B0D /* View */,
 				47E670FF2BC43F1B00517B0D /* Interactor */,
 				47E671002BC43F2400517B0D /* Presenter */,
 				47E670FE2BC43F0F00517B0D /* Entity */,
 				47E671012BC43F3400517B0D /* Router */,
+				476D78EF2BCB633600C7AA57 /* Cells */,
 			);
 			path = ProductList;
 			sourceTree = "<group>";
@@ -463,8 +501,7 @@
 				47E671072BC4474D00517B0D /* Moya */,
 				47E671092BC4474D00517B0D /* ReactiveMoya */,
 				47E6710B2BC4474D00517B0D /* RxMoya */,
-				476D78E52BCB5E4900C7AA57 /* SDWebImage */,
-				476D78E72BCB5E4900C7AA57 /* SDWebImageMapKit */,
+				47CE79FD2BD58437005ABD27 /* Kingfisher */,
 			);
 			productName = GetirFinalProject;
 			productReference = 47E6709C2BC42A4A00517B0D /* GetirFinalProject.app */;
@@ -540,7 +577,7 @@
 			mainGroup = 47E670932BC42A4A00517B0D;
 			packageReferences = (
 				47E671042BC4474D00517B0D /* XCRemoteSwiftPackageReference "Moya" */,
-				476D78E42BCB5E4900C7AA57 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				47CE79FC2BD58437005ABD27 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 47E6709D2BC42A4A00517B0D /* Products */;
 			projectDirPath = "";
@@ -798,7 +835,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -829,7 +866,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -965,12 +1002,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		476D78E42BCB5E4900C7AA57 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+		47CE79FC2BD58437005ABD27 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.19.1;
+				minimumVersion = 7.11.0;
 			};
 		};
 		47E671042BC4474D00517B0D /* XCRemoteSwiftPackageReference "Moya" */ = {
@@ -984,15 +1021,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		476D78E52BCB5E4900C7AA57 /* SDWebImage */ = {
+		47CE79FD2BD58437005ABD27 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 476D78E42BCB5E4900C7AA57 /* XCRemoteSwiftPackageReference "SDWebImage" */;
-			productName = SDWebImage;
-		};
-		476D78E72BCB5E4900C7AA57 /* SDWebImageMapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 476D78E42BCB5E4900C7AA57 /* XCRemoteSwiftPackageReference "SDWebImage" */;
-			productName = SDWebImageMapKit;
+			package = 47CE79FC2BD58437005ABD27 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		47E671052BC4474D00517B0D /* CombineMoya */ = {
 			isa = XCSwiftPackageProductDependency;

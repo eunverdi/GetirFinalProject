@@ -11,6 +11,8 @@ protocol ProductDetailViewControllerProtocol: AnyObject {
     func configureSubviews()
     func configureSuperview()
     func configureNavigationBar()
+    func configureProductStatus(productCount: String)
+    func setDelegates()
 }
 
 final class ProductDetailViewController: UIViewController {
@@ -28,6 +30,8 @@ final class ProductDetailViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private let cartButton = CartButtonView()
     
     private lazy var addToCartButton: UIButton = {
         let button = UIButton(type: .system)
@@ -47,6 +51,14 @@ final class ProductDetailViewController: UIViewController {
 }
 
 extension ProductDetailViewController: ProductDetailViewControllerProtocol {
+    func setDelegates() {
+        cartStatusContainerView.delegate = self
+    }
+    
+    func configureProductStatus(productCount: String) {
+        cartStatusContainerView.configureComponents(productCount: productCount)
+    }
+    
     func configureSuperview() {
         view.backgroundColor = .systemBackground
     }
@@ -64,6 +76,8 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         let backButtonImageConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .default)
         let backButtonImage = UIImage(systemName: "xmark")?.withConfiguration(backButtonImageConfig)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backButtonImage, style: .plain, target: self, action: #selector(backButtonPressed))
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cartButton)
     }
 }
 
@@ -84,5 +98,23 @@ extension ProductDetailViewController {
     
     @objc func backButtonPressed() {
         presenter?.backButtonPressed()
+    }
+}
+
+extension ProductDetailViewController: CartStatusProtocol {
+    func cartButtonVisibleStatus(isHidden: Bool) {
+        navigationItem.rightBarButtonItem?.isHidden = isHidden
+    }
+    
+    func updateProductCount(with count: String) {
+        presenter?.updateProductCount(with: count)
+    }
+    
+    func addProductToCart() {
+        presenter?.addProductToCart()
+    }
+    
+    func deleteProductFromCart() {
+        presenter?.deleteProductFromCart()
     }
 }

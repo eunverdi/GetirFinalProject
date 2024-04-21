@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SDWebImage
+import Kingfisher
 
 protocol ProductListCellProtocol: AnyObject {
     func setup()
@@ -100,7 +100,7 @@ final class ProductListCell: UICollectionViewCell {
     }
     
     private func updateCount(count: String) {
-        presenter?.updateCount(count: count)
+        presenter?.updateCount(with: count)
     }
     
     @objc private func deleteTapped() {
@@ -126,7 +126,7 @@ extension ProductListCell: ProductListCellProtocol {
     func configureAddedProductsCount(count: String) {
         let value = Int(count)!
         if value >= 1 {
-            self.expandableButtonView.countLabelText = "\(value)"
+            self.expandableButtonView.countLabel.text = "\(value)"
         }
     }
     
@@ -167,7 +167,7 @@ extension ProductListCell: ProductListCellProtocol {
     }
     
     func setProductImageView(url: URL) {
-        productImageView.sd_setImage(with: url)
+        productImageView.kf.setImage(with: url)
     }
     
     func configureDeletedProductsView() {
@@ -216,7 +216,7 @@ extension ProductListCell {
 }
 
 extension ProductListCell: ExpandableButtonViewProtocol {
-    func updateProductCount(count: String) {
+    func updateProductCount(with count: String) {
         updateCount(count: count)
     }
     
