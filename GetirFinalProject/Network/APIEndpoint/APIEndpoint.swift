@@ -15,9 +15,7 @@ enum APIEndpoint {
 
 extension APIEndpoint: TargetType {
     var baseURL: URL {
-        guard let url = URL(string: "https://65c38b5339055e7482c12050.mockapi.io/api/") else {
-            fatalError("api base url is corrupted")
-        }
+        let url = URL.string("https://65c38b5339055e7482c12050.mockapi.io/api/")
         return url
     }
     

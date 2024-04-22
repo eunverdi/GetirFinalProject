@@ -43,7 +43,7 @@ final class ProductDetailsView: UIView {
     private let productPriceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: Constants.Fonts.openSansBold, size: 20)
-        label.textColor = Constants.Colors.appMainColor
+        label.textColor = UIColor.named(Constants.Colors.appMainColor)
         label.numberOfLines = 1
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false

@@ -18,7 +18,7 @@ class CartButtonView: UIView {
     
     let imageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = UIImage(named: "cartButtonIcon")
+        iv.image = UIImage.named("cartButtonIcon")
         iv.backgroundColor = .white
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
@@ -29,9 +29,9 @@ class CartButtonView: UIView {
         lbl.text = "₺0,00"
         lbl.numberOfLines = 0
         lbl.font = UIFont(name: Constants.Fonts.openSansBold, size: 12)
-        lbl.textColor = Constants.Colors.appMainColor
+        lbl.textColor = UIColor.named(Constants.Colors.appMainColor)
         lbl.textAlignment = .center
-        lbl.backgroundColor = Constants.Colors.productImageBorderColor
+        lbl.backgroundColor = UIColor.named(Constants.Colors.productImageBorderColor)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()

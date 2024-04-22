@@ -34,7 +34,7 @@ final class ExpandableButtonView: UIView {
                 )
                 var countLabelValue = Int(self.countLabel.text!)
                 if countLabelValue! >= 1 {
-                    self.decrementButton.setImage(UIImage(named: "minusButtonIcon"), for: .normal)
+                    self.decrementButton.setImage(UIImage.named("minusButtonIcon"), for: .normal)
                     self.decrementButton.tag = 2
                 }
             }
@@ -54,11 +54,11 @@ final class ExpandableButtonView: UIView {
     
     lazy var addButton: UIButton = {
         let addButton = UIButton(type: .system)
-        let addButtonImage = UIImage(named: "plusButtonIcon")
+        let addButtonImage = UIImage.named("plusButtonIcon")
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.setImage(addButtonImage, for: .normal)
         addButton.backgroundColor = .white
-        addButton.tintColor = Constants.Colors.appMainColor
+        addButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
         addButton.layer.cornerRadius = 10
         if isExpanded {
             addButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -74,7 +74,7 @@ final class ExpandableButtonView: UIView {
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         countLabel.text = countLabelText
         countLabel.textAlignment = .center
-        countLabel.backgroundColor = Constants.Colors.appMainColor
+        countLabel.backgroundColor = UIColor.named(Constants.Colors.appMainColor)
         countLabel.font = UIFont(name: Constants.Fonts.openSansBold, size: 12)!
         countLabel.textColor = .white
         countLabel.isHidden = !isExpanded
@@ -83,10 +83,10 @@ final class ExpandableButtonView: UIView {
     
     lazy var decrementButton: UIButton = {
         let decrementButton = UIButton(type: .system)
-        let decrementButtonImage = UIImage(named: "trashButtonIcon")
+        let decrementButtonImage = UIImage.named("trashButtonIcon")
         decrementButton.translatesAutoresizingMaskIntoConstraints = false
         decrementButton.setImage(decrementButtonImage, for: .normal)
-        decrementButton.tintColor = Constants.Colors.appMainColor
+        decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
         decrementButton.isHidden = !isExpanded
         decrementButton.backgroundColor = .white
         decrementButton.layer.cornerRadius = 10
@@ -148,7 +148,7 @@ extension ExpandableButtonView {
         
         var countLabelValue = Int(self.countLabel.text!)
         if countLabelValue! >= 1 {
-            self.decrementButton.setImage(UIImage(named: "minusButtonIcon"), for: .normal)
+            self.decrementButton.setImage(UIImage.named("minusButtonIcon"), for: .normal)
             self.decrementButton.tag = 2
         }
         
@@ -200,7 +200,7 @@ extension ExpandableButtonView {
             delegate?.updateProductCount(with: "\(countLabelValue!)")
             
             if countLabelValue! == 1 {
-                self.decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)
+                self.decrementButton.setImage(UIImage.named("trashButtonIcon"), for: .normal)
                 self.decrementButton.tag = 1
             }
         }

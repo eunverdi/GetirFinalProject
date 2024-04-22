@@ -46,8 +46,8 @@ extension ProductDetailsViewPresenter {
     }
     
     private func setProductImageView() {
-        guard let productImageURLString = presentation.imageURL,
-              let productImageURL = URL(string: productImageURLString) else { return }
-        view?.configureProductImageView(with: productImageURL)
+        guard let imageURLString = presentation.imageURL else { return }
+        let imageURL = URL.string(imageURLString)
+        view?.configureProductImageView(with: imageURL)
     }
 }

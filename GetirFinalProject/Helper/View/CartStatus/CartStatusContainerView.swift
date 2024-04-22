@@ -11,7 +11,6 @@ protocol CartStatusProtocol: AnyObject {
     func updateProductCount(with count: String)
     func addProductToCart()
     func deleteProductFromCart()
-    func cartButtonVisibleStatus(isHidden: Bool)
 }
 
 final class CartStatusContainerView: UIView {
@@ -31,7 +30,7 @@ final class CartStatusContainerView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Sepete Ekle", for: .normal)
         button.titleLabel?.font = UIFont(name: Constants.Fonts.openSansBold, size: 14)
-        button.backgroundColor = Constants.Colors.appMainColor
+        button.backgroundColor = UIColor.named(Constants.Colors.appMainColor)
         button.tintColor = .white
         button.addTarget(self, action: #selector(addToCartButtonPressed), for: .touchUpInside)
         button.layer.cornerRadius = 10
@@ -40,9 +39,9 @@ final class CartStatusContainerView: UIView {
     
     private let decrementButton: UIButton = {
         let decrementButton = UIButton(type: .system)
-        let decrementButtonImage = UIImage(named: "trashButtonIcon")
+        let decrementButtonImage = UIImage.named("trashButtonIcon")
         decrementButton.setImage(decrementButtonImage, for: .normal)
-        decrementButton.tintColor = Constants.Colors.appMainColor
+        decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
         decrementButton.addTarget(self, action: #selector(decrementButtonPressed), for: .touchUpInside)
         decrementButton.layer.cornerRadius = 10
         decrementButton.tag = 1
@@ -52,11 +51,11 @@ final class CartStatusContainerView: UIView {
     
     private let incrementButton: UIButton = {
         let incrementButton = UIButton(type: .system)
-        let incrementButtonImage = UIImage(named: "plusButtonIcon")
+        let incrementButtonImage = UIImage.named("plusButtonIcon")
         incrementButton.addTarget(self, action: #selector(incrementButtonPressed), for: .touchUpInside)
         incrementButton.setImage(incrementButtonImage, for: .normal)
         incrementButton.backgroundColor = .white
-        incrementButton.tintColor = Constants.Colors.appMainColor
+        incrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
         incrementButton.layer.cornerRadius = 10
         incrementButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         return incrementButton
@@ -66,7 +65,7 @@ final class CartStatusContainerView: UIView {
         let countLabel = UILabel()
         countLabel.text = "1"
         countLabel.textAlignment = .center
-        countLabel.backgroundColor = Constants.Colors.appMainColor
+        countLabel.backgroundColor = UIColor.named(Constants.Colors.appMainColor)
         countLabel.font = UIFont(name: Constants.Fonts.openSansBold, size: 16)
         countLabel.textColor = .white
         return countLabel
@@ -96,12 +95,11 @@ final class CartStatusContainerView: UIView {
             self.addToCartButton.isHidden = true
             self.stepperButtonView.isHidden = false
             if value! == 1 {
-                self.decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)
+                self.decrementButton.setImage(UIImage.named("trashButtonIcon"), for: .normal)
             } else {
-                self.decrementButton.setImage(UIImage(systemName: "minus")?.withTintColor(Constants.Colors.appMainColor!, renderingMode: .alwaysTemplate), for: .normal)
+                self.decrementButton.setImage(UIImage.systemName("minus").withTintColor(UIColor.named(Constants.Colors.appMainColor), renderingMode: .alwaysTemplate), for: .normal)
             }
-            self.decrementButton.tintColor = Constants.Colors.appMainColor
-//            self.decrementButton.tag = 3
+            self.decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
             self.countLabel.text = productCount
         }
     }
@@ -113,11 +111,11 @@ final class CartStatusContainerView: UIView {
             delegate?.updateProductCount(with: "\(value)")
             
             if value != 1 {
-                decrementButton.setImage(UIImage(systemName: "minus")?.withTintColor(Constants.Colors.appMainColor!, renderingMode: .alwaysTemplate), for: .normal)
-                decrementButton.tintColor = Constants.Colors.appMainColor
+                decrementButton.setImage(UIImage.systemName("minus").withTintColor(UIColor.named(Constants.Colors.appMainColor), renderingMode: .alwaysTemplate), for: .normal)
+                decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
             } else {
-                decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)
-                decrementButton.tintColor = Constants.Colors.appMainColor
+                decrementButton.setImage(UIImage.named("trashButtonIcon"), for: .normal)
+                decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
             }
         }
     }
@@ -149,12 +147,12 @@ final class CartStatusContainerView: UIView {
             }
             
             if value != 1 {
-                decrementButton.setImage(UIImage(systemName: "minus")?.withTintColor(Constants.Colors.appMainColor!, renderingMode: .alwaysTemplate), for: .normal)
-                decrementButton.tintColor = Constants.Colors.appMainColor
+                decrementButton.setImage(UIImage.systemName("minus").withTintColor(UIColor.named(Constants.Colors.appMainColor), renderingMode: .alwaysTemplate), for: .normal)
+                decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
             } else if value == 1 {
                 decrementButton.tag = 3
-                decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)
-                decrementButton.tintColor = Constants.Colors.appMainColor
+                decrementButton.setImage(UIImage.named("trashButtonIcon"), for: .normal)
+                decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
             }
         }
     }
@@ -167,9 +165,8 @@ final class CartStatusContainerView: UIView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.addToCartButton.isHidden = true
             self.stepperButtonView.isHidden = false
-            self.decrementButton.setImage(UIImage(named: "trashButtonIcon"), for: .normal)
-            self.decrementButton.tintColor = Constants.Colors.appMainColor
-//            self.decrementButton.tag = 3
+            self.decrementButton.setImage(UIImage.named("trashButtonIcon"), for: .normal)
+            self.decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
         }
         
         delegate?.addProductToCart()

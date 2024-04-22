@@ -9,15 +9,15 @@ import UIKit
 
 public enum Constants {
     public enum Colors {
-        public static let appMainColor = UIColor(named: "appMainColor")
-        public static let productImageBorderColor = UIColor(named: "productImageBorderColor")
-        public static let sectionHeaderColor = UIColor(named: "sectionHeaderColor")
+        public static let appMainColor = "appMainColor"
+        public static let productImageBorderColor = "productImageBorderColor"
+        public static let sectionHeaderColor = "sectionHeaderColor"
     }
     
     public enum NavigationItem {
         public static let productListTitle = "Ürünler"
         public static let productDetailTitle = "Ürün Detayı"
-        public static let basketTitle = "Sepetim"
+        public static let cartListTitle = "Sepetim"
     }
     
     public enum Fonts {
