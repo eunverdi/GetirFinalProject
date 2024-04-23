@@ -39,7 +39,6 @@ final class CartListContainerView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.text = "1.500,00"
         label.textAlignment = .center
         label.textColor = UIColor.named(Constants.Colors.appMainColor)
         label.font = UIFont(name: Constants.Fonts.openSansBold, size: 20)
@@ -62,46 +61,12 @@ final class CartListContainerView: UIView {
         return stackView
     }()
     
-    @objc func makeOrderButtonPressed() {
-        makeOrderButton.setTitle("", for: .normal)
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.delegate?.makeOrderButtonPressed(totalCost: self.totalCostLabel.text!)
-        }
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(checkTotalCost), name: NSNotification.Name("TotalCostUpdated"), object: nil)
-        makeOrderButton.addSubview(activityIndicator)
-        containerView.addArrangedSubview(makeOrderButton)
-        containerView.addArrangedSubview(totalCostLabel)
-        addSubview(containerView)
-        
-        NSLayoutConstraint.activate([
-            containerView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            containerView.heightAnchor.constraint(equalToConstant: 50),
-            
-            activityIndicator.centerXAnchor.constraint(equalTo: makeOrderButton.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: makeOrderButton.centerYAnchor),
-            
-            makeOrderButton.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.65),
-            totalCostLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.35),           
-        ])
-        
-        backgroundColor = .white
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.15
-        layer.shadowOffset = CGSize(width: 0, height: -1)
-        layer.shadowRadius = 10
-        layer.masksToBounds = false
-        
+        configureSubviews()
+        setConstraints()
+        configureSuperview()
+        setNotification()
         ProductRepository.shared.calculateTotalCost()
     }
     
@@ -119,7 +84,7 @@ extension CartListContainerView {
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
 
-        if let totalCost = notification.userInfo?["totalCost"] as? Double,
+        if let totalCost = notification.userInfo?[Constants.NotificationUserInfo.totalCostUpdated] as? Double,
            let formattedString = formatter.string(from: NSNumber(value: totalCost)) {
             DispatchQueue.main.async {
                 self.totalCostLabel.text = "₺\(formattedString)"
@@ -128,3 +93,58 @@ extension CartListContainerView {
     }
 }
 
+extension CartListContainerView {
+    @objc func makeOrderButtonPressed() {
+        makeOrderButton.setTitle("", for: .normal)
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.delegate?.makeOrderButtonPressed(totalCost: self.totalCostLabel.text!)
+        }
+    }
+}
+
+extension CartListContainerView {
+    private func configureSubviews() {
+        makeOrderButton.addSubview(activityIndicator)
+        containerView.addArrangedSubview(makeOrderButton)
+        containerView.addArrangedSubview(totalCostLabel)
+        addSubview(containerView)
+    }
+}
+
+extension CartListContainerView {
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            containerView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            containerView.heightAnchor.constraint(equalToConstant: 50),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: makeOrderButton.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: makeOrderButton.centerYAnchor),
+            
+            makeOrderButton.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.65),
+            totalCostLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.35),
+        ])
+    }
+}
+
+extension CartListContainerView {
+    private func configureSuperview() {
+        backgroundColor = .white
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.15
+        layer.shadowOffset = CGSize(width: 0, height: -1)
+        layer.shadowRadius = 10
+        layer.masksToBounds = false
+    }
+}
+
+extension CartListContainerView {
+    private func setNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(checkTotalCost), name: Constants.NotificationName.totalCost, object: nil)
+    }
+}

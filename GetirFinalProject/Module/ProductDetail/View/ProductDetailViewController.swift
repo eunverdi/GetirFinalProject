@@ -13,7 +13,6 @@ protocol ProductDetailViewControllerProtocol: AnyObject {
     func configureNavigationBar()
     func configureProductStatus(productCount: String)
     func setDelegates()
-    func setNotification()
 }
 
 final class ProductDetailViewController: UIViewController {
@@ -50,18 +49,13 @@ final class ProductDetailViewController: UIViewController {
         presenter?.viewDidLoad(detailsView: productDetailsView)
     }
     
-    @objc func checkTotalCost(_ notification: Notification) {
-        //hidden durumunu ayarla
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter?.viewDidLoad(detailsView: productDetailsView)
     }
 }
 
 extension ProductDetailViewController: ProductDetailViewControllerProtocol {
-    func setNotification() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(checkTotalCost(_:)), name: Constants.NotificationName.totalCost,
-                                               object: nil)
-    }
-    
     func setDelegates() {
         cartStatusContainerView.delegate = self
         cartButton.delegate = self
@@ -89,7 +83,6 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         let backButtonImage = UIImage.systemName(Constants.ImageName.xmark).withConfiguration(backButtonImageConfig)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backButtonImage, style: .plain, target: self, action: #selector(backButtonPressed))
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cartButton)
-        navigationItem.rightBarButtonItem?.isHidden = true
     }
 }
 

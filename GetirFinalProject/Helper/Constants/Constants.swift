@@ -30,6 +30,7 @@ public enum Constants {
         public static let trashButtonIcon = "trashButtonIcon"
         public static let plusButtonIcon = "plusButtonIcon"
         public static let minusButtonIcon = "minusButtonIcon"
+        public static let cartButtonIcon = "cartButtonIcon"
     }
     
     public enum ButtonTitle {
@@ -49,5 +50,9 @@ public enum Constants {
         public static let baseURL = "https://65c38b5339055e7482c12050.mockapi.io/api/"
         public static let productsEndpoint = "products"
         public static let suggestedProductsEndpoint = "suggestedProducts"
+    }
+    
+    public enum CartList {
+        public static let heightForRow = 120.0
     }
 }

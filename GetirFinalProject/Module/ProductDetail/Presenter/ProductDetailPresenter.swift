@@ -70,7 +70,6 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
         view?.configureNavigationBar()
         view?.configureSuperview()
         view?.setDelegates()
-        view?.setNotification()
         interactor?.checkIsAddedToCart(productID: productID)
     }
     

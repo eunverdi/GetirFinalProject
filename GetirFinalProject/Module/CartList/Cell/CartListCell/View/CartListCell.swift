@@ -217,10 +217,10 @@ extension CartListCell {
             productImageView.widthAnchor.constraint(equalTo: mainStackView.widthAnchor, multiplier: 0.25),
             productImageView.heightAnchor.constraint(equalTo: mainStackView.heightAnchor),
             
-            labelsStackView.topAnchor.constraint(equalTo: mainStackView.topAnchor, constant: 8.5),
+            labelsStackView.topAnchor.constraint(equalTo: productImageView.topAnchor),
             labelsStackView.leadingAnchor.constraint(equalTo: productImageView.trailingAnchor, constant: 12),
             labelsStackView.trailingAnchor.constraint(equalTo: stepperButtonView.leadingAnchor, constant: -8.5),
-            labelsStackView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: -12),
+            labelsStackView.bottomAnchor.constraint(equalTo: productImageView.bottomAnchor),
             
             stepperButtonView.centerXAnchor.constraint(equalTo: mainStackView.centerXAnchor),
             stepperButtonView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),

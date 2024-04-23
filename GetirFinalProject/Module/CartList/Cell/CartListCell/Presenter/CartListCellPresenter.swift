@@ -14,17 +14,19 @@ protocol CartListCellPresenterProtocol: AnyObject {
 }
 
 final class CartListCellPresenter {
-    
     private weak var cell: CartListCellProtocol?
     private let interactor: CartListCellInteractorProtocol?
     private var presentation: ProductPresentation
+    private var indexPath: IndexPath?
     
     init(cell: CartListCellProtocol?,
          interactor: CartListCellInteractorProtocol?,
-         presentation: ProductPresentation) {
+         presentation: ProductPresentation,
+         indexPath: IndexPath?) {
         self.cell = cell
         self.interactor = interactor
         self.presentation = presentation
+        self.indexPath = indexPath
     }
 }
 
@@ -81,7 +83,11 @@ extension CartListCellPresenter {
 
 extension CartListCellPresenter: CartListCellInteractorOutputProtocol {
     func deletedProductToCart() {
-//        cell?.reloadData
+        guard let indexPath = indexPath,
+              let presentationID = presentation.id else { return }
+        NotificationCenter.default.post(name: NSNotification.Name("deleteProduct"),
+                                        object: nil,
+                                        userInfo: ["indexPath": indexPath])
     }
     
     func productCountFromCart(count: String) {

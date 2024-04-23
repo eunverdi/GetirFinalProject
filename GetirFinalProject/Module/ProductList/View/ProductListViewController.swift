@@ -7,7 +7,7 @@
 
 import UIKit
 
-fileprivate enum Identifier: String {
+public enum Identifier: String {
     case sectionHeaderIdentifier = "HeaderView"
 }
 
@@ -33,7 +33,7 @@ final class ProductListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        reloadData()
+//        presenter?.viewDidLoad()
     }
 }
 
@@ -43,6 +43,7 @@ extension ProductListViewController: ProductListViewControllerProtocol {
         configureSuperview()
         configureNavigationBar()
         configureCollectionView()
+        setConstraints()
     }
     
     func reloadData() {
@@ -81,12 +82,15 @@ extension ProductListViewController {
                                 forSupplementaryViewOfKind: Identifier.sectionHeaderIdentifier.rawValue,
                                 withReuseIdentifier: Identifier.sectionHeaderIdentifier.rawValue)
         view.addSubview(collectionView)
-        
+    }
+    
+    private func setConstraints() {
+        guard let collectionView = collectionView else { return }
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
 }

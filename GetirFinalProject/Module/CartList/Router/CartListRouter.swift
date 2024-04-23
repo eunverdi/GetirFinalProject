@@ -10,6 +10,7 @@ import Foundation
 enum CartListRoutes {
     case back
     case popToRoot
+    case productDetail(presentation: ProductPresentation)
 }
 
 protocol CartListRouterProtocol: AnyObject {
@@ -42,6 +43,9 @@ extension CartListRouter: CartListRouterProtocol {
             viewController?.navigationController?.popViewController(animated: true)
         case .popToRoot:
             viewController?.navigationController?.popToRootViewController(animated: true)
+        case .productDetail(let presentation):
+            let productDetailVC = ProductDetailRouter.createModule(with: presentation)
+            viewController?.navigationController?.pushViewController(productDetailVC, animated: true)
         }
     }
 }

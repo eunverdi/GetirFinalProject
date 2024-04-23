@@ -13,36 +13,36 @@ protocol CartButtonViewProtocol: AnyObject {
 
 class CartButtonView: UIView {
     
-    static let shared = CartButtonView()
     weak var delegate: CartButtonViewProtocol?
+    private var buttonEnabled: Bool = true
     
     let imageView: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage.named("cartButtonIcon")
-        iv.backgroundColor = .white
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        return iv
+        let imageView = UIImageView()
+        imageView.image = UIImage.named(Constants.ImageName.cartButtonIcon)
+        imageView.backgroundColor = .white
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     let label: UILabel = {
-        let lbl = UILabel()
-        lbl.text = "₺0,00"
-        lbl.numberOfLines = 0
-        lbl.font = UIFont(name: Constants.Fonts.openSansBold, size: 12)
-        lbl.textColor = UIColor.named(Constants.Colors.appMainColor)
-        lbl.textAlignment = .center
-        lbl.backgroundColor = UIColor.named(Constants.Colors.productImageBorderColor)
-        lbl.translatesAutoresizingMaskIntoConstraints = false
-        return lbl
+        let label = UILabel()
+        label.text = "₺0,00"
+        label.numberOfLines = 0
+        label.font = UIFont(name: Constants.Fonts.openSansBold, size: 12)
+        label.textColor = UIColor.named(Constants.Colors.appMainColor)
+        label.textAlignment = .center
+        label.backgroundColor = UIColor.named(Constants.Colors.productImageBorderColor)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let stackView: UIStackView = {
-        let sv = UIStackView()
-        sv.axis = .horizontal
-        sv.distribution = .fillProportionally
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.clipsToBounds = true
-        return sv
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillProportionally
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.clipsToBounds = true
+        return stackView
     }()
     
     let containerView: UIView = {
@@ -53,18 +53,22 @@ class CartButtonView: UIView {
         return view
     }()
     
-    private override init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTotalCost(_:)), name: NSNotification.Name("TotalCostUpdated"), object: nil)
-        
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pressed)))
-        
-        addSubview(containerView)
-        containerView.addSubview(stackView)
-        stackView.addArrangedSubview(imageView)
-        stackView.addArrangedSubview(label)
-        
+        setNotification()
+        configureSuperview()
+        configureSubviews()
+        setConstraints()
+        ProductRepository.shared.calculateTotalCost()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension CartButtonView {
+    private func setConstraints() {
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: topAnchor),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -82,10 +86,39 @@ class CartButtonView: UIView {
             widthAnchor.constraint(equalToConstant: 90),
             heightAnchor.constraint(equalToConstant: 35)
         ])
-        
-        ProductRepository.shared.calculateTotalCost()
     }
-    
+}
+
+extension CartButtonView {
+    private func configureSuperview() {
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pressed)))
+    }
+}
+
+extension CartButtonView {
+    private func configureSubviews() {
+        addSubview(containerView)
+        containerView.addSubview(stackView)
+        stackView.addArrangedSubview(imageView)
+        stackView.addArrangedSubview(label)
+    }
+}
+
+extension CartButtonView {
+    private func setNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTotalCost(_:)), name: Constants.NotificationName.totalCost, object: nil)
+    }
+}
+
+extension CartButtonView {
+    @objc private func pressed() {
+        if buttonEnabled {
+            self.delegate?.cartButtonPressed()
+        }
+    }
+}
+
+extension CartButtonView {
     @objc func updateTotalCost(_ notification: Notification) {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -94,8 +127,11 @@ class CartButtonView: UIView {
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
 
-        if let totalCost = notification.userInfo?["totalCost"] as? Double,
+        if let totalCost = notification.userInfo?[Constants.NotificationUserInfo.totalCostUpdated] as? Double,
            let formattedString = formatter.string(from: NSNumber(value: totalCost)) {
+
+            self.buttonEnabled = totalCost == 0.0 ? false : true
+            
             DispatchQueue.main.async {
                 self.label.text = "₺\(formattedString)"
                 if formattedString.count > 8 {
@@ -105,23 +141,5 @@ class CartButtonView: UIView {
                 }
             }
         }
-        
-//        defer {
-//            if self.label.text == "₺0,00" {
-//                isUserInteractionEnabled = false
-//            } else {
-//                isUserInteractionEnabled = true
-//            }
-//        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc private func pressed() {
-        delegate?.cartButtonPressed()
     }
 }
-
-

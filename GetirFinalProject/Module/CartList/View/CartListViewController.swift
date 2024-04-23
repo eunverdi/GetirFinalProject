@@ -10,14 +10,17 @@ import UIKit
 protocol CartListViewControllerProtocol: AnyObject {
     func prepareViewDidLoad()
     func deletedAllProducts()
+    func deleteRow(at indexPath: IndexPath)
+    func reloadCollectionView()
 }
 
 final class CartListViewController: UIViewController {
     
     var presenter: CartListPresenterProtocol?
-    
+    private var collectionView: UICollectionView? = nil
     private let tableView: UITableView = {
         let tableView = UITableView()
+        tableView.allowsSelection = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -38,7 +41,8 @@ extension CartListViewController: CartListViewControllerProtocol {
     func prepareViewDidLoad() {
         configureSuperview()
         configureSubviews()
-        setupTableView()
+        configureTableView()
+        configureCollectionView()
         configureConstraints()
         configureNavigationBar()
         setDelegates()
@@ -46,6 +50,19 @@ extension CartListViewController: CartListViewControllerProtocol {
     
     func deletedAllProducts() {
         reloadData()
+    }
+    
+    func deleteRow(at indexPath: IndexPath) {
+        DispatchQueue.main.async {
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            self.tableView.reloadData()
+        }
+    }
+    
+    func reloadCollectionView() {
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
     }
 }
 
@@ -71,8 +88,23 @@ extension CartListViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: rightBarButtonImage, style: .plain, target: self, action: #selector(deleteButtonPressed))
     }
     
-    private func setupTableView() {
+    private func configureTableView() {
         tableView.register(CartListCell.self)
+    }
+    
+    private func configureCollectionView() {
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
+        
+        guard let collectionView = collectionView else { return }
+        
+        collectionView.register(ProductListCell.self)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(UICollectionReusableView.self,
+                                forSupplementaryViewOfKind: Identifier.sectionHeaderIdentifier.rawValue,
+                                withReuseIdentifier: Identifier.sectionHeaderIdentifier.rawValue)
+        view.addSubview(collectionView)
     }
     
     private func setDelegates() {
@@ -82,6 +114,7 @@ extension CartListViewController {
     }
     
     private func configureConstraints() {
+        guard let collectionView = collectionView else { return }
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -91,7 +124,12 @@ extension CartListViewController {
             cartListContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             cartListContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             cartListContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            cartListContainerView.heightAnchor.constraint(equalToConstant: 100)
+            cartListContainerView.heightAnchor.constraint(equalToConstant: 100),
+            
+            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 45),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 }
@@ -122,6 +160,12 @@ extension CartListViewController {
     }
 }
 
+extension CartListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter?.navigateToProductDetail(at: indexPath)
+    }
+}
+
 extension CartListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let presenter = presenter else {
@@ -136,22 +180,76 @@ extension CartListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as CartListCell
         let productPresentation = presenter.getProductPresentation(at: indexPath)
-        CartListCellBuilder.createCell(cell, presentation: productPresentation)
+        CartListCellBuilder.createCell(cell, presentation: productPresentation, indexPath: indexPath)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        120
+        guard let presenter = presenter else {
+            return .init()
+        }
+        return presenter.heightForRow()
+    }
+}
+
+extension CartListViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Identifier.sectionHeaderIdentifier.rawValue, for: indexPath)
+        header.backgroundColor = UIColor.named(Constants.Colors.sectionHeaderColor)
+        return header
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let presenter = presenter else {
+            fatalError("ProductListViewController: Error happened in numberOfItemsInSection")
+        }
+        return presenter.numberOfRowsInSectionRecommendedProducts()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let presenter = presenter else {
+            return .init()
+        }
+        let cell = collectionView.dequeueReusableCell(forIndexPath: indexPath) as ProductListCell
+        let productPresentation = presenter.getRecommendedProductPresentation(at: indexPath)
+        ProductListCellBuilder.createCell(cell, presentation: productPresentation)
+        return cell
+    }
+}
+
+extension CartListViewController {
+    private func createLayout() -> UICollectionViewCompositionalLayout {
+        UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            let horizontalListLayout = self.makeHorizontalListLayout()
+            return horizontalListLayout
+        }
+    }
+}
+
+extension CartListViewController {
+    private func makeHorizontalListLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1.2/4), heightDimension: .fractionalWidth(1.5/3)), subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        
+        section.interGroupSpacing = 0
+        section.orthogonalScrollingBehavior = .continuous
+        section.contentInsets = .init(top: 0, leading: 5, bottom: 0, trailing: 3)
+        section.boundarySupplementaryItems = [
+            .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16)),
+                  elementKind: Identifier.sectionHeaderIdentifier.rawValue, alignment: .top),
+        ]
+        return section
     }
 }
 
 extension CartListViewController: CartListContainverViewProtocol {
     func makeOrderButtonPressed(totalCost: String) {
-        showAlert(title: "Sipariş Başarılı", message: "Siparişiniz alındı.Toplam Ücret \(totalCost)", completion: { [weak self] in
+        showAlert(title: "Sipariş Başarılı", message: "Siparişiniz alındı. Toplam Ücret = \(totalCost)", completion: { [weak self] in
             guard let self = self else { return }
             self.presenter?.orderCompleted()
         })

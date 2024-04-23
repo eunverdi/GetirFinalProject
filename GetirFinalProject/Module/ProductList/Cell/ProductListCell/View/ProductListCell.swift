@@ -155,8 +155,17 @@ extension ProductListCell: ProductListCellProtocol {
     }
     
     func setProductPriceLabel(price: Double) {
-        let formattedPrice = String(format: "%.2f", price)
-        productPriceLabel.text = "₺\(formattedPrice)"
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = ","
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+
+        if let formattedString = formatter.string(from: NSNumber(value: price)) {
+            DispatchQueue.main.async {
+                self.productPriceLabel.text = "₺\(formattedString)"
+            }
+        }
     }
     
     func setProductAttributeLabel(text: String) {

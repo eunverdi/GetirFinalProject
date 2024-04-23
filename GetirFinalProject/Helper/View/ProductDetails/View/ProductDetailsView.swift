@@ -76,11 +76,41 @@ final class ProductDetailsView: UIView {
     }
     
     private func setupViews() {
-        addSubview(productImageView)
-        addSubview(productNameLabel)
-        addSubview(productPriceLabel)
-        addSubview(productAttributeLabel)
-        
+        configureSubviews()
+        setConstraints()
+    }
+}
+
+extension ProductDetailsView: ProductDetailsViewProtocol {
+    func configureProductNameLabel(_ text: String) {
+        productNameLabel.text = text
+    }
+    
+    func configureProductPriceLabel(_ price: Double) {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = ","
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+
+        if let formattedString = formatter.string(from: NSNumber(value: price)) {
+            DispatchQueue.main.async {
+                self.productPriceLabel.text = "₺\(formattedString)"
+            }
+        }
+    }
+    
+    func configureProductAttributeLabel(_ text: String) {
+        productAttributeLabel.text = text
+    }
+    
+    func configureProductImageView(with url: URL) {
+        productImageView.kf.setImage(with: url)
+    }
+}
+
+extension ProductDetailsView {
+    private func setConstraints() {
         NSLayoutConstraint.activate([
             productImageView.topAnchor.constraint(equalTo: topAnchor),
             productImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -102,21 +132,11 @@ final class ProductDetailsView: UIView {
     }
 }
 
-extension ProductDetailsView: ProductDetailsViewProtocol {
-    func configureProductNameLabel(_ text: String) {
-        productNameLabel.text = text
-    }
-    
-    func configureProductPriceLabel(_ price: Double) {
-        let formattedPrice = String(format: "%.2f", price)
-        productPriceLabel.text = "₺\(formattedPrice)"
-    }
-    
-    func configureProductAttributeLabel(_ text: String) {
-        productAttributeLabel.text = text
-    }
-    
-    func configureProductImageView(with url: URL) {
-        productImageView.kf.setImage(with: url)
+extension ProductDetailsView {
+    private func configureSubviews() {
+        addSubview(productImageView)
+        addSubview(productNameLabel)
+        addSubview(productPriceLabel)
+        addSubview(productAttributeLabel)
     }
 }

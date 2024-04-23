@@ -8,9 +8,9 @@
 import Foundation
 
 final class CartListCellBuilder {
-    static func createCell(_ cell: CartListCell, presentation: ProductPresentation) {
+    static func createCell(_ cell: CartListCell, presentation: ProductPresentation, indexPath: IndexPath) {
         let interactor = CartListCellInteractor()
-        let presenter = CartListCellPresenter(cell: cell, interactor: interactor, presentation: presentation)
+        let presenter = CartListCellPresenter(cell: cell, interactor: interactor, presentation: presentation, indexPath: indexPath)
         interactor.output = presenter
         cell.presenter = presenter
     }
