@@ -12,6 +12,7 @@ protocol CartListViewControllerProtocol: AnyObject {
     func deletedAllProducts()
     func deleteRow(at indexPath: IndexPath)
     func reloadCollectionView()
+    func reloadTableView()
 }
 
 final class CartListViewController: UIViewController {
@@ -21,6 +22,7 @@ final class CartListViewController: UIViewController {
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.allowsSelection = false
+        tableView.showsVerticalScrollIndicator = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -38,6 +40,12 @@ final class CartListViewController: UIViewController {
 }
 
 extension CartListViewController: CartListViewControllerProtocol {
+    func reloadTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
     func prepareViewDidLoad() {
         configureSuperview()
         configureSubviews()
@@ -73,7 +81,7 @@ extension CartListViewController {
     }
     
     private func configureSuperview() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor.named(Constants.Colors.sectionHeaderColor)
     }
     
     private func configureNavigationBar() {
@@ -96,14 +104,14 @@ extension CartListViewController {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         
         guard let collectionView = collectionView else { return }
-        
+        collectionView.isScrollEnabled = false
         collectionView.register(ProductListCell.self)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(UICollectionReusableView.self,
+        collectionView.register(HeaderView.self,
                                 forSupplementaryViewOfKind: Identifier.sectionHeaderIdentifier.rawValue,
-                                withReuseIdentifier: Identifier.sectionHeaderIdentifier.rawValue)
+                                withReuseIdentifier: HeaderView.reuseIdentifier)
         view.addSubview(collectionView)
     }
     
@@ -126,10 +134,10 @@ extension CartListViewController {
             cartListContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             cartListContainerView.heightAnchor.constraint(equalToConstant: 100),
             
-            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 45),
+            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 200)
+            collectionView.heightAnchor.constraint(equalToConstant: 250)
         ])
     }
 }
@@ -160,12 +168,6 @@ extension CartListViewController {
     }
 }
 
-extension CartListViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter?.navigateToProductDetail(at: indexPath)
-    }
-}
-
 extension CartListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let presenter = presenter else {
@@ -192,14 +194,20 @@ extension CartListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension CartListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter?.navigateToProductDetail(at: indexPath)
+    }
+}
+
 extension CartListViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         1
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Identifier.sectionHeaderIdentifier.rawValue, for: indexPath)
-        header.backgroundColor = UIColor.named(Constants.Colors.sectionHeaderColor)
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.reuseIdentifier, for: indexPath) as! HeaderView
+        header.configure(with: "Önerilen Ürünler")
         return header
     }
     
@@ -236,13 +244,13 @@ extension CartListViewController {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1.2/4), heightDimension: .fractionalWidth(1.5/3)), subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: Identifier.sectionHeaderIdentifier.rawValue, alignment: .top)
+        
         section.interGroupSpacing = 0
         section.orthogonalScrollingBehavior = .continuous
         section.contentInsets = .init(top: 0, leading: 5, bottom: 0, trailing: 3)
-        section.boundarySupplementaryItems = [
-            .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16)),
-                  elementKind: Identifier.sectionHeaderIdentifier.rawValue, alignment: .top),
-        ]
+        section.boundarySupplementaryItems = [header]
         return section
     }
 }

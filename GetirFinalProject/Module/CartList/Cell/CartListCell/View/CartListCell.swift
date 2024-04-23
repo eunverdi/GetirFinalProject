@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 protocol CartListCellProtocol: AnyObject {
     func setup()
@@ -195,7 +196,7 @@ extension CartListCell: CartListCellProtocol {
     }
     
     func setProductImageView(url: URL) {
-        productImageView.kf.setImage(with: url)
+        productImageView.sd_setImage(with: url)
     }
     
     func configureAddedProductsCount(count: String) {

@@ -9,6 +9,7 @@ import UIKit
 
 protocol ProductListPresenterProtocol: AnyObject {
     func viewDidLoad()
+    func viewWillAppear()
     func navigateToProductDetail(at indexPath: IndexPath, section: Section)
     func navigateToCart()
     func getVListProductPresentation(at indexPath: IndexPath) -> ProductPresentation
@@ -68,6 +69,10 @@ extension ProductListPresenter: ProductListPresenterProtocol {
     func viewDidLoad() {
         view?.prepareViewDidLoad()
         interactor?.fetchProducts()
+    }
+    
+    func viewWillAppear() {
+        view?.reloadData()
     }
 }
 

@@ -30,7 +30,6 @@
 		476D78D62BCB44D800C7AA57 /* ProductListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D78CF2BC9EEF300C7AA57 /* ProductListCell.swift */; };
 		476D78D82BCB4FBF00C7AA57 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D78D72BCB4FBF00C7AA57 /* NetworkManager.swift */; };
 		476D78DA2BCB506200C7AA57 /* APIEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476D78D92BCB506200C7AA57 /* APIEndpoint.swift */; };
-		47CE79FE2BD58437005ABD27 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 47CE79FD2BD58437005ABD27 /* Kingfisher */; };
 		47CE7A162BD58B1B005ABD27 /* CartListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CE7A152BD58B1B005ABD27 /* CartListViewController.swift */; };
 		47CE7A182BD58B68005ABD27 /* CartListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CE7A172BD58B68005ABD27 /* CartListRouter.swift */; };
 		47CE7A1A2BD58BAC005ABD27 /* CartListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CE7A192BD58BAC005ABD27 /* CartListInteractor.swift */; };
@@ -48,6 +47,9 @@
 		47CE7A3B2BD6B911005ABD27 /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CE7A3A2BD6B911005ABD27 /* URL+Extension.swift */; };
 		47CE7A3D2BD6BA10005ABD27 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CE7A3C2BD6BA10005ABD27 /* UITableView+Extension.swift */; };
 		47CE7A3F2BD6BBA2005ABD27 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CE7A3E2BD6BBA2005ABD27 /* UICollectionView+Extension.swift */; };
+		47CE7A482BD85B09005ABD27 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 47CE7A472BD85B09005ABD27 /* SDWebImage */; };
+		47CE7A4A2BD85B09005ABD27 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 47CE7A492BD85B09005ABD27 /* SDWebImageMapKit */; };
+		47CE7A4D2BD86F6F005ABD27 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CE7A4C2BD86F6F005ABD27 /* HeaderView.swift */; };
 		47E670A02BC42A4A00517B0D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E6709F2BC42A4A00517B0D /* AppDelegate.swift */; };
 		47E670A22BC42A4A00517B0D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E670A12BC42A4A00517B0D /* SceneDelegate.swift */; };
 		47E670A92BC42A4C00517B0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47E670A82BC42A4C00517B0D /* Assets.xcassets */; };
@@ -123,6 +125,7 @@
 		47CE7A3A2BD6B911005ABD27 /* URL+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		47CE7A3C2BD6BA10005ABD27 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		47CE7A3E2BD6BBA2005ABD27 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
+		47CE7A4C2BD86F6F005ABD27 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		47E6709C2BC42A4A00517B0D /* GetirFinalProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GetirFinalProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47E6709F2BC42A4A00517B0D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47E670A12BC42A4A00517B0D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -150,7 +153,8 @@
 				47E671062BC4474D00517B0D /* CombineMoya in Frameworks */,
 				47E6710C2BC4474D00517B0D /* RxMoya in Frameworks */,
 				47E6710A2BC4474D00517B0D /* ReactiveMoya in Frameworks */,
-				47CE79FE2BD58437005ABD27 /* Kingfisher in Frameworks */,
+				47CE7A4A2BD85B09005ABD27 /* SDWebImageMapKit in Frameworks */,
+				47CE7A482BD85B09005ABD27 /* SDWebImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +339,7 @@
 		476D78FC2BCB70A000C7AA57 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				47CE7A4B2BD86F5D005ABD27 /* HeaderView */,
 				47CE7A2C2BD6A3CB005ABD27 /* CartListContainer */,
 				47CE7A062BD58741005ABD27 /* ExpandableButton */,
 				47CE7A052BD5873A005ABD27 /* CartButton */,
@@ -525,6 +530,14 @@
 			path = Module;
 			sourceTree = "<group>";
 		};
+		47CE7A4B2BD86F5D005ABD27 /* HeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				47CE7A4C2BD86F6F005ABD27 /* HeaderView.swift */,
+			);
+			path = HeaderView;
+			sourceTree = "<group>";
+		};
 		47E670932BC42A4A00517B0D = {
 			isa = PBXGroup;
 			children = (
@@ -661,7 +674,8 @@
 				47E671072BC4474D00517B0D /* Moya */,
 				47E671092BC4474D00517B0D /* ReactiveMoya */,
 				47E6710B2BC4474D00517B0D /* RxMoya */,
-				47CE79FD2BD58437005ABD27 /* Kingfisher */,
+				47CE7A472BD85B09005ABD27 /* SDWebImage */,
+				47CE7A492BD85B09005ABD27 /* SDWebImageMapKit */,
 			);
 			productName = GetirFinalProject;
 			productReference = 47E6709C2BC42A4A00517B0D /* GetirFinalProject.app */;
@@ -737,7 +751,7 @@
 			mainGroup = 47E670932BC42A4A00517B0D;
 			packageReferences = (
 				47E671042BC4474D00517B0D /* XCRemoteSwiftPackageReference "Moya" */,
-				47CE79FC2BD58437005ABD27 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				47CE7A462BD85B09005ABD27 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			productRefGroup = 47E6709D2BC42A4A00517B0D /* Products */;
 			projectDirPath = "";
@@ -793,6 +807,7 @@
 				47CE7A3D2BD6BA10005ABD27 /* UITableView+Extension.swift in Sources */,
 				47CE7A272BD59660005ABD27 /* CartListCellPresenter.swift in Sources */,
 				47CE7A2E2BD6A400005ABD27 /* CartListContainerView.swift in Sources */,
+				47CE7A4D2BD86F6F005ABD27 /* HeaderView.swift in Sources */,
 				47003A182BD3D2FE008B937A /* CartButtonView.swift in Sources */,
 				476D78C72BC99CE600C7AA57 /* UINavigationController+Extension.swift in Sources */,
 				47CE7A292BD59AED005ABD27 /* CartListCellInteractor.swift in Sources */,
@@ -1178,12 +1193,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		47CE79FC2BD58437005ABD27 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		47CE7A462BD85B09005ABD27 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 7.11.0;
+				minimumVersion = 5.19.1;
 			};
 		};
 		47E671042BC4474D00517B0D /* XCRemoteSwiftPackageReference "Moya" */ = {
@@ -1197,10 +1212,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		47CE79FD2BD58437005ABD27 /* Kingfisher */ = {
+		47CE7A472BD85B09005ABD27 /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 47CE79FC2BD58437005ABD27 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
+			package = 47CE7A462BD85B09005ABD27 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		47CE7A492BD85B09005ABD27 /* SDWebImageMapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 47CE7A462BD85B09005ABD27 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImageMapKit;
 		};
 		47E671052BC4474D00517B0D /* CombineMoya */ = {
 			isa = XCSwiftPackageProductDependency;

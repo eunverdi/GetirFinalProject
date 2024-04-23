@@ -25,7 +25,7 @@ final class CartListPresenter {
     private let interactor: CartListInteractorProtocol?
     private let router: CartListRouterProtocol?
     
-    private var presentations: [ProductPresentation] = []
+    private var presentations = Observable<[ProductPresentation]>([])
     private var recommendedProducts: [ProductPresentation] = []
     
     init(view: CartListViewControllerProtocol?,
@@ -60,23 +60,23 @@ extension CartListPresenter: CartListPresenterProtocol {
     }
     
     func orderCompleted() {
-        let productsIDs = presentations.compactMap({ $0.id })
+        let productsIDs = presentations.value.compactMap({ $0.id })
         interactor?.deleteProducts(productsIDs: productsIDs)
         router?.navigate(.popToRoot)
     }
     
     func deleteButtonPressed() {
-        let productsIDs = presentations.compactMap({ $0.id })
+        let productsIDs = presentations.value.compactMap({ $0.id })
         interactor?.deleteProducts(productsIDs: productsIDs)
         router?.navigate(.popToRoot)
     }
     
     func getProductPresentation(at indexPath: IndexPath) -> ProductPresentation {
-        presentations[indexPath.item]
+        presentations.value[indexPath.item]
     }
     
     func numberOfRowsInSection() -> Int {
-        presentations.count
+        presentations.value.count
     }
     
     func navigateToBack() {
@@ -87,10 +87,23 @@ extension CartListPresenter: CartListPresenterProtocol {
         view?.prepareViewDidLoad()
         interactor?.fetchProductsInCart()
         interactor?.fetchRecommendedProducts()
+        interactor?.observeProducts()
     }
 }
 
 extension CartListPresenter: CartListInteractorOutputProtocol {
+    func observeProductsOutput(products: [ProductInCart]) {
+        presentations.value = products.map { product in
+            return ProductPresentation(id: product.id,
+                                       name: product.name,
+                                       attribute: product.attribute,
+                                       price: product.price,
+                                       imageURL: product.imageURL,
+                                       currentAmount: product.currentAmount)
+        }
+        view?.reloadTableView()
+    }
+    
     func fetchRecommendedProductsOutputs(_ result: Result<[HListProductsModel], any Error>) {
         switch result {
         case .success(let responseModel):
@@ -102,7 +115,7 @@ extension CartListPresenter: CartListInteractorOutputProtocol {
     }
     
     func deletedProductsInCartOutput() {
-        presentations.removeAll()
+        presentations.value.removeAll()
         view?.deletedAllProducts()
     }
     
@@ -113,7 +126,7 @@ extension CartListPresenter: CartListInteractorOutputProtocol {
 
 extension CartListPresenter {
     private func makeProductPresentation(products: [ProductInCart]) {
-        presentations = products.map { product in
+        presentations.value = products.map { product in
             return ProductPresentation(id: product.id,
                                        name: product.name,
                                        attribute: product.attribute,
@@ -127,9 +140,9 @@ extension CartListPresenter {
 extension CartListPresenter {
     @objc func deleteProductNotification(_ notification: Notification) {
         if let indexPath = notification.userInfo?["indexPath"] as? IndexPath {
-            presentations.remove(at: indexPath.row)
+            presentations.value.remove(at: indexPath.row)
             view?.deleteRow(at: indexPath)
-            if presentations.isEmpty {
+            if presentations.value.isEmpty {
                 router?.navigate(.popToRoot)
             }
         }

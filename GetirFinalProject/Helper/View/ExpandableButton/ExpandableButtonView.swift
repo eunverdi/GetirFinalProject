@@ -50,7 +50,7 @@ final class ExpandableButtonView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var addButton: UIButton = {
+    private lazy var addButton: UIButton = {
         let addButton = UIButton(type: .system)
         let addButtonImage = UIImage.named(Constants.ImageName.plusButtonIcon)
         addButton.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +79,7 @@ final class ExpandableButtonView: UIView {
         return countLabel
     }()
     
-    lazy var decrementButton: UIButton = {
+    private lazy var decrementButton: UIButton = {
         let decrementButton = UIButton(type: .system)
         let decrementButtonImage = UIImage.named(Constants.ImageName.trashButtonIcon)
         decrementButton.translatesAutoresizingMaskIntoConstraints = false
@@ -94,7 +94,7 @@ final class ExpandableButtonView: UIView {
         return decrementButton
     }()
     
-    lazy var expandedStackView: UIStackView = {
+    private lazy var expandedStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.isHidden = !isExpanded
@@ -103,7 +103,7 @@ final class ExpandableButtonView: UIView {
         return stackView
     }()
     
-    lazy var containerStackView: UIStackView = {
+    private lazy var containerStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical

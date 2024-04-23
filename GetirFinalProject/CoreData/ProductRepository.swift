@@ -8,6 +8,23 @@
 import UIKit
 import CoreData
 
+class Observable<T> {
+    var value: T {
+        didSet {
+            DispatchQueue.main.async {
+                self.valueChanged?(self.value)
+            }
+        }
+    }
+
+    var valueChanged: ((T) -> Void)?
+
+    init(_ value: T) {
+        self.value = value
+    }
+}
+
+
 protocol ProductRepositoryProtocol: AnyObject {
     func checkIsAddedToCart(with productID: String, completion: @escaping (Result<Bool, Error>) -> Void)
     func getProductsFromPersistance(completion: @escaping (Result<[ProductInCart], Error>) -> Void)
@@ -15,9 +32,10 @@ protocol ProductRepositoryProtocol: AnyObject {
     func deleteProduct(with id: String)
 }
 
-final class ProductRepository {
+final class ProductRepository: NSObject {
     static let shared = ProductRepository()
-    private init() {}
+    private override init() {}
+    var products = Observable<[ProductInCart]>([])
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
     private var moc: NSManagedObjectContext {
         return appDelegate.persistentContainer.viewContext
@@ -25,6 +43,18 @@ final class ProductRepository {
 }
 
 extension ProductRepository: ProductRepositoryProtocol {
+    
+    private func updateProductsObservable() {
+            do {
+                let request: NSFetchRequest<ProductInCart> = ProductInCart.fetchRequest()
+                request.returnsObjectsAsFaults = false
+                let products = try moc.fetch(request)
+                self.products.value = products
+            } catch {
+                print("ProductRepository: Failed to fetch products: \(error)")
+            }
+        }
+    
     func checkIsAddedToCart(with productID: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         do {
             let request: NSFetchRequest<ProductInCart> = ProductInCart.fetchRequest()
@@ -91,6 +121,7 @@ extension ProductRepository: ProductRepositoryProtocol {
                 productInCart.currentAmount = presentation.currentAmount
                 appDelegate.saveContext()
                 calculateTotalCost()
+                updateProductsObservable()
             } else {
                 print("ProductRepository: Product not found")
             }
@@ -110,6 +141,7 @@ extension ProductRepository: ProductRepositoryProtocol {
         
         appDelegate.saveContext()
         calculateTotalCost()
+        updateProductsObservable()
     }
     
     func deleteProduct(with id: String) {
@@ -122,6 +154,7 @@ extension ProductRepository: ProductRepositoryProtocol {
                 moc.delete(movieModel)
                 appDelegate.saveContext()
                 calculateTotalCost()
+                updateProductsObservable()
             }
         } catch {
             print("ProductRepository: Error while deleting products\(error)")

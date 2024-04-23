@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 protocol ProductDetailsViewProtocol: AnyObject {
     var presenter: ProductDetailsViewPresenter? { get set }
@@ -105,7 +106,7 @@ extension ProductDetailsView: ProductDetailsViewProtocol {
     }
     
     func configureProductImageView(with url: URL) {
-        productImageView.kf.setImage(with: url)
+        productImageView.sd_setImage(with: url)
     }
 }
 

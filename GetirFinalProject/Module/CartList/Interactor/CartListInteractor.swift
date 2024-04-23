@@ -11,11 +11,13 @@ protocol CartListInteractorOutputProtocol: AnyObject {
     func fetchProductsInCartOutput(_ products: [ProductInCart])
     func fetchRecommendedProductsOutputs(_ result: Result<[HListProductsModel], Error>)
     func deletedProductsInCartOutput()
+    func observeProductsOutput(products: [ProductInCart])
 }
 
 protocol CartListInteractorProtocol {
     func fetchProductsInCart()
     func fetchRecommendedProducts()
+    func observeProducts()
     func deleteProducts(productsIDs: [String])
 }
 
@@ -25,6 +27,12 @@ final class CartListInteractor {
 }
 
 extension CartListInteractor: CartListInteractorProtocol {
+    func observeProducts() {
+        ProductRepository.shared.products.valueChanged = { [output] products in
+            output?.observeProductsOutput(products: products)
+        }
+    }
+    
     func fetchRecommendedProducts() {
         networkManager.getHorizontalListProducts { [output] result in
             output?.fetchRecommendedProductsOutputs(result)

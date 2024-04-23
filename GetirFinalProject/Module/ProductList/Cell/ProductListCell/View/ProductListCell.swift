@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Kingfisher
+import SDWebImage
 
 protocol ProductListCellProtocol: AnyObject {
     func setup()
@@ -173,7 +173,7 @@ extension ProductListCell: ProductListCellProtocol {
     }
     
     func setProductImageView(url: URL) {
-        productImageView.kf.setImage(with: url)
+        productImageView.sd_setImage(with: url)
     }
     
     func configureDeletedProductsView() {

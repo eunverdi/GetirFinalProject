@@ -9,13 +9,13 @@ import Foundation
 
 struct HListProductsModel: Codable {
     let products: [Product]?
-    let id, name: String
+    let id, name: String?
     
     struct Product: Codable {
-        let id: String
+        let id: String?
         let imageURL: String?
-        let price: Double
-        let name, priceText: String
+        let price: Double?
+        let name, priceText: String?
         let shortDescription, category: String?
         let unitPrice: Double?
         let squareThumbnailURL: String?
