@@ -33,7 +33,7 @@ final class HomeDetailPresenterTests: XCTestCase {
         sut = nil
     }
     
-    func test_viewDidLoad_NotNilMealViewModel_InvokeRequiredMethods() {
+    func test_viewDidLoad_InvokeRequiredMethods() {
         XCTAssertEqual(view.invokedConfigureSubviewsCount, .zero)
         XCTAssertEqual(view.invokedConfigureSuperviewCount, .zero)
         XCTAssertEqual(view.invokedConfigureNavigationBarCount, .zero)
