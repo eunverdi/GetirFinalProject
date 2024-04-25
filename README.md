@@ -40,4 +40,5 @@ VIPER. In addition, Storyboard and XIB structures were not used. The entire inte
 - The management of all images was done with SDWebImage. 
 - The products to be added to the cart, and the recording of all their information, and the use of this data when needed, was provided by CoreData.
 
+## Usage
 ![Simulator Screen Recording - iPhone 15 Plus - 2024-04-25 at 07 48 32](https://github.com/eunverdi/GetirFinalProject/assets/89488125/e8cbeec9-3eda-4dfa-9719-46ca8c9bb371)
