@@ -44,11 +44,13 @@ extension ProductDetailInteractor: ProductDetailInteractorProtocol {
                         switch result {
                         case .success(let productCount):
                             self.output?.productCountOutput(productCount: productCount)
+                        
                         case .failure(let error):
                             print(error)
                         }
                     }
                 }
+            
             case .failure(let error):
                 print(error)
             }

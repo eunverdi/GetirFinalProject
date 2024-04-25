@@ -12,7 +12,6 @@ protocol CartListContainverViewProtocol: AnyObject {
 }
 
 final class CartListContainerView: UIView {
-    
     weak var delegate: CartListContainverViewProtocol?
     
     private let activityIndicator: UIActivityIndicatorView = {
@@ -23,7 +22,7 @@ final class CartListContainerView: UIView {
         return view
     }()
     
-    private let makeOrderButton: UIButton = {
+    private lazy var makeOrderButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(Constants.ButtonTitle.completeOrder, for: .normal)
@@ -84,8 +83,7 @@ extension CartListContainerView {
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
 
-        if let totalCost = notification.userInfo?[Constants.NotificationUserInfo.totalCostUpdated] as? Double,
-           let formattedString = formatter.string(from: NSNumber(value: totalCost)) {
+        if let totalCost = notification.userInfo?[Constants.NotificationUserInfo.totalCostUpdated] as? Double, let formattedString = formatter.string(from: NSNumber(value: totalCost)) {
             DispatchQueue.main.async {
                 self.totalCostLabel.text = "₺\(formattedString)"
             }
@@ -98,9 +96,12 @@ extension CartListContainerView {
         makeOrderButton.setTitle("", for: .normal)
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
+        guard let totalCost = self.totalCostLabel.text else {
+            return
+        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.delegate?.makeOrderButtonPressed(totalCost: self.totalCostLabel.text!)
+            self.delegate?.makeOrderButtonPressed(totalCost: totalCost)
         }
     }
 }
@@ -127,7 +128,7 @@ extension CartListContainerView {
             activityIndicator.centerYAnchor.constraint(equalTo: makeOrderButton.centerYAnchor),
             
             makeOrderButton.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.65),
-            totalCostLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.35),
+            totalCostLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.35)
         ])
     }
 }

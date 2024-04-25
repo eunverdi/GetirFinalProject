@@ -23,10 +23,7 @@ final class ProductDetailPresenter {
     
     private var presentation: ProductPresentation?
     
-    init(view: ProductDetailViewControllerProtocol?,
-         interactor: ProductDetailInteractorProtocol?,
-         router: ProductDetailRouterProtocol?,
-         presentation: ProductPresentation?) {
+    init(view: ProductDetailViewControllerProtocol?, interactor: ProductDetailInteractorProtocol?, router: ProductDetailRouterProtocol?, presentation: ProductPresentation?) {
         self.view = view
         self.interactor = interactor
         self.router = router
@@ -40,29 +37,31 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
     }
     
     func updateProductCount(with count: String) {
-        guard var presentation = presentation else { return }
+        guard var presentation = presentation else {
+            return
+        }
         presentation.currentAmount = count
         interactor?.updateProductCount(product: presentation)
     }
     
     func addProductToCart() {
-        guard var presentation = presentation,
-              let currentAmount = presentation.currentAmount,
-              var amountIntValue = Int(currentAmount) else { return }
+        guard var presentation = presentation, let currentAmount = presentation.currentAmount, var amountIntValue = Int(currentAmount) else {
+            return
+        }
         amountIntValue += 1
         presentation.currentAmount = "\(amountIntValue)"
         interactor?.addProductToCart(presentation: presentation)
     }
     
     func deleteProductFromCart() {
-        guard let presentation = presentation,
-              let productID = presentation.id else { return }
+        guard let presentation = presentation, let productID = presentation.id else {
+            return
+        }
         interactor?.deleteProductFromCart(productID: productID)
     }
     
     func viewDidLoad(detailsView: ProductDetailsView) {
-        guard let presentation = presentation,
-              let productID = presentation.id else {
+        guard let presentation = presentation, let productID = presentation.id else {
             return
         }
         ProductDetailsViewBuilder.createView(detailsView, presentation: presentation)

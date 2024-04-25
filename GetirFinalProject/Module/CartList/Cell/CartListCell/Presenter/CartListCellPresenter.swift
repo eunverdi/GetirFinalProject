@@ -19,10 +19,7 @@ final class CartListCellPresenter {
     private var presentation: ProductPresentation
     private var indexPath: IndexPath?
     
-    init(cell: CartListCellProtocol?,
-         interactor: CartListCellInteractorProtocol?,
-         presentation: ProductPresentation,
-         indexPath: IndexPath?) {
+    init(cell: CartListCellProtocol?, interactor: CartListCellInteractorProtocol?, presentation: ProductPresentation, indexPath: IndexPath?) {
         self.cell = cell
         self.interactor = interactor
         self.presentation = presentation
@@ -52,42 +49,49 @@ extension CartListCellPresenter: CartListCellPresenterProtocol {
 
 extension CartListCellPresenter {
     private func configureProductName() {
-        guard let productName = presentation.name else { return }
+        guard let productName = presentation.name else {
+            return
+        }
         cell?.setProductNameLabel(text: productName)
     }
     
     private func configureProductPrice() {
-        guard let productPrice = presentation.price,
-              let currentAmount = presentation.currentAmount,
-              let productAmonut = Double(currentAmount) else { return }
+        guard let productPrice = presentation.price, let currentAmount = presentation.currentAmount, let productAmonut = Double(currentAmount) else {
+            return
+        }
         let totalCost = productPrice * productAmonut
         cell?.setProductPriceLabel(price: totalCost)
     }
     
     private func configureProductAttribute() {
-        guard let productAttribute = presentation.attribute else { return }
+        guard let productAttribute = presentation.attribute else {
+            return
+        }
         cell?.setProductAttributeLabel(text: productAttribute)
     }
     
     private func configureProductImage() {
-        guard let imageURLString = presentation.imageURL else { return }
+        guard let imageURLString = presentation.imageURL else {
+            return
+        }
         let imageURL = URL.string(imageURLString)
         cell?.setProductImageView(url: imageURL)
     }
     
     private func configureStepperView() {
-        guard let productCount = presentation.currentAmount else { return }
+        guard let productCount = presentation.currentAmount else {
+            return
+        }
         cell?.configureStepperView(productCount: productCount)
     }
 }
 
 extension CartListCellPresenter: CartListCellInteractorOutputProtocol {
     func deletedProductToCart() {
-        guard let indexPath = indexPath,
-              let presentationID = presentation.id else { return }
-        NotificationCenter.default.post(name: NSNotification.Name("deleteProduct"),
-                                        object: nil,
-                                        userInfo: ["indexPath": indexPath])
+        guard let indexPath = indexPath else {
+            return
+        }
+        NotificationCenter.default.post(name: NSNotification.Name("deleteProduct"), object: nil, userInfo: ["indexPath": indexPath])
     }
     
     func productCountFromCart(count: String) {

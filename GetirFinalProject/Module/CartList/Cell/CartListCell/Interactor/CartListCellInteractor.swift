@@ -28,6 +28,7 @@ extension CartListCellInteractor: CartListCellInteractorProtocol {
             switch result {
             case .success(let count):
                 self.output?.productCountFromCart(count: count)
+
             case .failure(let error):
                 print(error)
             }
@@ -36,12 +37,16 @@ extension CartListCellInteractor: CartListCellInteractorProtocol {
     
     func updateProductCount(product: ProductPresentation) {
         ProductRepository.shared.updateProductAmount(with: product)
-        guard let productID = product.id else { return }
+        guard let productID = product.id else {
+            return
+        }
         checkProductCount(productID: productID)
     }
     
     func deleteProductToCart(product: ProductPresentation) {
-        guard let productID = product.id else { return }
+        guard let productID = product.id else {
+            return
+        }
         ProductRepository.shared.deleteProduct(with: productID)
         output?.deletedProductToCart()
     }

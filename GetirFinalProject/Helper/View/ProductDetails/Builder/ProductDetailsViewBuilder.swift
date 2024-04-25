@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ProductDetailsViewBuilder {
+enum ProductDetailsViewBuilder {
     static func createView(_ view: ProductDetailsView, presentation: ProductPresentation) {
         view.presenter = ProductDetailsViewPresenter(view: view, presentation: presentation)
     }

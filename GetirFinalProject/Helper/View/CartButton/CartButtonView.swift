@@ -11,12 +11,11 @@ protocol CartButtonViewProtocol: AnyObject {
     func cartButtonPressed()
 }
 
-class CartButtonView: UIView {
-    
+final class CartButtonView: UIView {
     weak var delegate: CartButtonViewProtocol?
-    private var buttonEnabled: Bool = true
+    private var buttonEnabled = true
     
-    let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage.named(Constants.ImageName.cartButtonIcon)
         imageView.backgroundColor = .white
@@ -24,7 +23,7 @@ class CartButtonView: UIView {
         return imageView
     }()
     
-    let label: UILabel = {
+    private let label: UILabel = {
         let label = UILabel()
         label.text = "₺0,00"
         label.numberOfLines = 0
@@ -36,7 +35,7 @@ class CartButtonView: UIView {
         return label
     }()
     
-    let stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fillProportionally
@@ -45,7 +44,7 @@ class CartButtonView: UIView {
         return stackView
     }()
     
-    let containerView: UIView = {
+    private let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 10
@@ -127,9 +126,7 @@ extension CartButtonView {
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
 
-        if let totalCost = notification.userInfo?[Constants.NotificationUserInfo.totalCostUpdated] as? Double,
-           let formattedString = formatter.string(from: NSNumber(value: totalCost)) {
-
+        if let totalCost = notification.userInfo?[Constants.NotificationUserInfo.totalCostUpdated] as? Double, let formattedString = formatter.string(from: NSNumber(value: totalCost)) {
             self.buttonEnabled = totalCost == 0.0 ? false : true
             
             DispatchQueue.main.async {

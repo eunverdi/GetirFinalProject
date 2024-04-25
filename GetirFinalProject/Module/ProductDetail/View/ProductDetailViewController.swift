@@ -16,7 +16,6 @@ protocol ProductDetailViewControllerProtocol: AnyObject {
 }
 
 final class ProductDetailViewController: UIViewController {
-    
     var presenter: ProductDetailPresenterProtocol?
     
     private let productDetailsView: ProductDetailsView = {
@@ -77,12 +76,13 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     
     func configureNavigationBar() {
         navigationItem.title = Constants.NavigationItem.productDetailTitle
-        let font = UIFont(name: Constants.Fonts.openSansBold, size: 14)
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: font]
         let backButtonImageConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .default)
         let backButtonImage = UIImage.systemName(Constants.ImageName.xmark).withConfiguration(backButtonImageConfig)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backButtonImage, style: .plain, target: self, action: #selector(backButtonPressed))
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cartButton)
+        if let font = UIFont(name: Constants.Fonts.openSansBold, size: 14) {
+            navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: font]
+        }
     }
 }
 

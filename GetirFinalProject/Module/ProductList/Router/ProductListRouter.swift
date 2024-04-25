@@ -42,6 +42,7 @@ extension ProductListRouter: ProductListRouterProtocol {
         case .detail(let presentation):
             let productDetailVC = ProductDetailRouter.createModule(with: presentation)
             viewController?.navigationController?.pushViewController(productDetailVC, animated: true)
+        
         case .cart:
             let cartVC = CartListRouter.createModule()
             viewController?.navigationController?.pushViewController(cartVC, animated: true)

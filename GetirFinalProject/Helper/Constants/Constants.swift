@@ -55,4 +55,20 @@ public enum Constants {
     public enum CartList {
         public static let heightForRow = 120.0
     }
+    
+    public enum Identifier {
+        public static let sectionHeaderIdentifier = "HeaderView"
+    }
+    
+    public enum Alert {
+        public static let deleteAlertTitle = "Sepeti Boşalt"
+        public static let deleteAlertMessage = "Sepetini boşaltmak istediğinden emin misin?"
+        
+        public static let orderCompletedAlertTitle = "Sipariş Başarılı"
+        public static let orderCompletedAlertMessage = "Siparişiniz alındı! Kuryelerimiz en kısa sürede siparişinizi size teslim edecek. Sepet tutarınız ="
+    }
+    
+    public enum HeaderView {
+        public static let recommendedProductsHeaderTitle = "Önerilen Ürünler"
+    }
 }

@@ -32,12 +32,16 @@ extension ProductDetailsViewPresenter: ProductDetailsViewPresenterProtocol {
 
 extension ProductDetailsViewPresenter {
     private func setProductNameLabel() {
-        guard let productName = presentation.name else { return }
+        guard let productName = presentation.name else {
+            return
+        }
         view?.configureProductNameLabel(productName)
     }
     
     private func setProductPriceLabel() {
-        guard let productPrice = presentation.price else { return }
+        guard let productPrice = presentation.price else {
+            return
+        }
         view?.configureProductPriceLabel(productPrice)
     }
     
@@ -46,7 +50,9 @@ extension ProductDetailsViewPresenter {
     }
     
     private func setProductImageView() {
-        guard let imageURLString = presentation.imageURL else { return }
+        guard let imageURLString = presentation.imageURL else {
+            return
+        }
         let imageURL = URL.string(imageURLString)
         view?.configureProductImageView(with: imageURL)
     }

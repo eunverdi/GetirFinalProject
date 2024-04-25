@@ -86,7 +86,7 @@ final class CartListCell: UITableViewCell {
         return mainStackView
     }()
     
-    private let decrementButton: UIButton = {
+    private lazy var decrementButton: UIButton = {
         let decrementButton = UIButton(type: .system)
         let decrementButtonImage = UIImage.named(Constants.ImageName.trashButtonIcon)
         decrementButton.setImage(decrementButtonImage, for: .normal)
@@ -98,7 +98,7 @@ final class CartListCell: UITableViewCell {
         return decrementButton
     }()
     
-    private let incrementButton: UIButton = {
+    private lazy var incrementButton: UIButton = {
         let incrementButton = UIButton(type: .system)
         let incrementButtonImage = UIImage.named(Constants.ImageName.plusButtonIcon)
         incrementButton.addTarget(self, action: #selector(incrementButtonPressed), for: .touchUpInside)
@@ -140,7 +140,9 @@ final class CartListCell: UITableViewCell {
 extension CartListCell: CartListCellProtocol {
     func configureStepperView(productCount: String) {
         countLabel.text = productCount
-        guard let productCountIntValue = Int(productCount) else { return }
+        guard let productCountIntValue = Int(productCount) else {
+            return
+        }
         if productCountIntValue > 1 {
             let decrementButtonImage = UIImage.named(Constants.ImageName.minusButtonIcon)
             decrementButton.setImage(decrementButtonImage, for: .normal)
@@ -166,16 +168,16 @@ extension CartListCell: CartListCellProtocol {
         mainStackView.addArrangedSubview(productImageView)
         mainStackView.addArrangedSubview(labelsStackView)
         mainStackView.addArrangedSubview(stepperButtonView)
-        
+
         addSubview(mainStackView)
-        
+
         setConstraints()
     }
-    
+
     func setProductNameLabel(text: String) {
         productNameLabel.text = text
     }
-    
+
     func setProductPriceLabel(price: Double) {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -223,7 +225,6 @@ extension CartListCell {
             labelsStackView.trailingAnchor.constraint(equalTo: stepperButtonView.leadingAnchor, constant: -8.5),
             labelsStackView.bottomAnchor.constraint(equalTo: productImageView.bottomAnchor),
             
-            stepperButtonView.centerXAnchor.constraint(equalTo: mainStackView.centerXAnchor),
             stepperButtonView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),
             stepperButtonView.widthAnchor.constraint(equalTo: mainStackView.widthAnchor, multiplier: 0.3),
             stepperButtonView.heightAnchor.constraint(equalTo: mainStackView.heightAnchor, multiplier: 0.4)
@@ -233,8 +234,9 @@ extension CartListCell {
 
 extension CartListCell {
     @objc private func incrementButtonPressed() {
-        guard let countLabelText = self.countLabel.text,
-              var countLabelValue = Int(countLabelText) else { return }
+        guard let countLabelText = self.countLabel.text, var countLabelValue = Int(countLabelText) else {
+            return
+        }
         countLabelValue += 1
         let valueStringFormat = String(countLabelValue)
         presenter?.updateCount(with: valueStringFormat)
@@ -245,8 +247,9 @@ extension CartListCell {
         if buttonStatus == 1 {
             presenter?.deleteProduct()
         } else {
-            guard let countLabelText = self.countLabel.text,
-                  var countLabelValue = Int(countLabelText) else { return }
+            guard let countLabelText = self.countLabel.text, var countLabelValue = Int(countLabelText) else {
+                return
+            }
             countLabelValue -= 1
             let valueStringFormat = String(countLabelValue)
             presenter?.updateCount(with: valueStringFormat)

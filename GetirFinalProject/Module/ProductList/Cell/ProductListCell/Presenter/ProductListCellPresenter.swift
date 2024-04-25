@@ -52,28 +52,38 @@ extension ProductListCellPresenter: ProductListCellPresenterProtocol {
 
 extension ProductListCellPresenter {
     private func configureAddedCartStatus() {
-        guard let productID = presentation.id else { return }
+        guard let productID = presentation.id else {
+            return
+        }
         interactor?.checkIsAddedToCart(productID: productID)
         interactor?.checkProductCount(productID: productID)
     }
     
     private func configureProductName() {
-        guard let productName = presentation.name else { return }
+        guard let productName = presentation.name else {
+            return
+        }
         cell?.setProductNameLabel(text: productName)
     }
     
     private func configureProductPrice() {
-        guard let productPrice = presentation.price else { return }
+        guard let productPrice = presentation.price else {
+            return
+        }
         cell?.setProductPriceLabel(price: productPrice)
     }
     
     private func configureProductAttribute() {
-        guard let productAttribute = presentation.attribute else { return }
+        guard let productAttribute = presentation.attribute else {
+            return
+        }
         cell?.setProductAttributeLabel(text: productAttribute)
     }
     
     private func configureProductImage() {
-        guard let imageURLString = presentation.imageURL else { return }
+        guard let imageURLString = presentation.imageURL else {
+            return
+        }
         let imageURL = URL.string(imageURLString)
         cell?.setProductImageView(url: imageURL)
     }

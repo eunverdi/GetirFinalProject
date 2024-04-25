@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class CartListCellBuilder {
+enum CartListCellBuilder {
     static func createCell(_ cell: CartListCell, presentation: ProductPresentation, indexPath: IndexPath) {
         let interactor = CartListCellInteractor()
         let presenter = CartListCellPresenter(cell: cell, interactor: interactor, presentation: presentation, indexPath: indexPath)

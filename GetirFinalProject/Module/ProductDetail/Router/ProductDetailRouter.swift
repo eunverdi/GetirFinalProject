@@ -40,6 +40,7 @@ extension ProductDetailRouter: ProductDetailRouterProtocol {
         switch route {
         case .productList:
             viewController?.navigationController?.popViewController(animated: true)
+        
         case .cart:
             let cartVC = CartListRouter.createModule()
             viewController?.navigationController?.pushViewController(cartVC, animated: true)

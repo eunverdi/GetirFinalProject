@@ -10,15 +10,13 @@ import UIKit
 protocol CartListViewControllerProtocol: AnyObject {
     func prepareViewDidLoad()
     func deletedAllProducts()
-    func deleteRow(at indexPath: IndexPath)
     func reloadCollectionView()
     func reloadTableView()
 }
 
 final class CartListViewController: UIViewController {
-    
     var presenter: CartListPresenterProtocol?
-    private var collectionView: UICollectionView? = nil
+    private var collectionView: UICollectionView?
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.allowsSelection = false
@@ -46,6 +44,12 @@ extension CartListViewController: CartListViewControllerProtocol {
         }
     }
     
+    func reloadCollectionView() {
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+    }
+    
     func prepareViewDidLoad() {
         configureSuperview()
         configureSubviews()
@@ -58,19 +62,6 @@ extension CartListViewController: CartListViewControllerProtocol {
     
     func deletedAllProducts() {
         reloadData()
-    }
-    
-    func deleteRow(at indexPath: IndexPath) {
-        DispatchQueue.main.async {
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
-            self.tableView.reloadData()
-        }
-    }
-    
-    func reloadCollectionView() {
-        DispatchQueue.main.async {
-            self.collectionView?.reloadData()
-        }
     }
 }
 
@@ -94,6 +85,10 @@ extension CartListViewController {
         let rightBarButtonImageConfig = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold, scale: .default)
         let rightBarButtonImage = UIImage.named(Constants.ImageName.trashButtonIcon).withConfiguration(rightBarButtonImageConfig)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: rightBarButtonImage, style: .plain, target: self, action: #selector(deleteButtonPressed))
+        
+        if let font = UIFont(name: Constants.Fonts.openSansBold, size: 14) {
+            navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: font]
+        }
     }
     
     private func configureTableView() {
@@ -103,15 +98,15 @@ extension CartListViewController {
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         
-        guard let collectionView = collectionView else { return }
+        guard let collectionView = collectionView else {
+            return
+        }
         collectionView.isScrollEnabled = false
         collectionView.register(ProductListCell.self)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(HeaderView.self,
-                                forSupplementaryViewOfKind: Identifier.sectionHeaderIdentifier.rawValue,
-                                withReuseIdentifier: HeaderView.reuseIdentifier)
+        collectionView.register(HeaderView.self, forSupplementaryViewOfKind: Constants.Identifier.sectionHeaderIdentifier, withReuseIdentifier: HeaderView.reuseIdentifier)
         view.addSubview(collectionView)
     }
     
@@ -122,7 +117,9 @@ extension CartListViewController {
     }
     
     private func configureConstraints() {
-        guard let collectionView = collectionView else { return }
+        guard let collectionView = collectionView else {
+            return
+        }
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -150,7 +147,7 @@ extension CartListViewController {
 
 extension CartListViewController {
     @objc private func deleteButtonPressed() {
-        showDeletedProductAlert(title: "Sepeti Boşalt", message: "Sepetini boşaltmak istediğinden emin misin?") { actionType in
+        showDeletedProductAlert(title: Constants.Alert.deleteAlertTitle, message: Constants.Alert.deleteAlertMessage) { actionType in
             if actionType == .ok {
                 self.presenter?.deleteButtonPressed()
             }
@@ -206,8 +203,10 @@ extension CartListViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.reuseIdentifier, for: indexPath) as! HeaderView
-        header.configure(with: "Önerilen Ürünler")
+        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.reuseIdentifier, for: indexPath) as? HeaderView else {
+            return UICollectionReusableView()
+        }
+        header.configure(with: Constants.HeaderView.recommendedProductsHeaderTitle)
         return header
     }
     
@@ -231,7 +230,7 @@ extension CartListViewController: UICollectionViewDataSource {
 
 extension CartListViewController {
     private func createLayout() -> UICollectionViewCompositionalLayout {
-        UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+        UICollectionViewCompositionalLayout { _, _ in
             let horizontalListLayout = self.makeHorizontalListLayout()
             return horizontalListLayout
         }
@@ -241,11 +240,11 @@ extension CartListViewController {
 extension CartListViewController {
     private func makeHorizontalListLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1.2/4), heightDimension: .fractionalWidth(1.5/3)), subitems: [item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1.2 / 4), heightDimension: .fractionalWidth(1.5 / 3)), subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: Identifier.sectionHeaderIdentifier.rawValue, alignment: .top)
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: Constants.Identifier.sectionHeaderIdentifier, alignment: .top)
         
         section.interGroupSpacing = 0
         section.orthogonalScrollingBehavior = .continuous
@@ -257,9 +256,11 @@ extension CartListViewController {
 
 extension CartListViewController: CartListContainverViewProtocol {
     func makeOrderButtonPressed(totalCost: String) {
-        showAlert(title: "Sipariş Başarılı", message: "Siparişiniz alındı. Toplam Ücret = \(totalCost)", completion: { [weak self] in
-            guard let self = self else { return }
+        showAlert(title: Constants.Alert.orderCompletedAlertTitle, message: "\(Constants.Alert.orderCompletedAlertMessage) \(totalCost)") { [weak self] in
+            guard let self = self else {
+                return
+            }
             self.presenter?.orderCompleted()
-        })
+        }
     }
 }

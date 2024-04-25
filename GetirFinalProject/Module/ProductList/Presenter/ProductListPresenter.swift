@@ -26,15 +26,12 @@ final class ProductListPresenter {
     private var horizontalListProducts: [ProductPresentation] = []
     private var verticalListProducts: [ProductPresentation] = []
     
-    init(view: ProductListViewControllerProtocol?,
-         interactor: ProductListInteractorProtocol?,
-         router: ProductListRouterProtocol?) {
+    init(view: ProductListViewControllerProtocol?, interactor: ProductListInteractorProtocol?, router: ProductListRouterProtocol?) {
         self.view = view
         self.interactor = interactor
         self.router = router
     }
 }
-
 
 extension ProductListPresenter: ProductListPresenterProtocol {
     func getVListProductPresentation(at indexPath: IndexPath) -> ProductPresentation {
@@ -57,6 +54,7 @@ extension ProductListPresenter: ProductListPresenterProtocol {
         switch section {
         case .horizontalListProducts:
             router?.navigate(.detail(presentation: horizontalListProducts[indexPath.item]))
+        
         case .verticalListProducts:
             router?.navigate(.detail(presentation: verticalListProducts[indexPath.item]))
         }
@@ -82,6 +80,7 @@ extension ProductListPresenter: ProductListInteractorOutputProtocol {
         case .success(let responseModel):
             makeVerticalListProductPresentation(with: responseModel)
             view?.reloadData()
+        
         case .failure(let error):
             print(error)
         }
@@ -92,6 +91,7 @@ extension ProductListPresenter: ProductListInteractorOutputProtocol {
         case .success(let responseModel):
             makeHorizontalListProductPresentation(with: responseModel)
             view?.reloadData()
+        
         case .failure(let error):
             print(error)
         }
@@ -100,28 +100,22 @@ extension ProductListPresenter: ProductListInteractorOutputProtocol {
 
 extension ProductListPresenter {
     private func makeHorizontalListProductPresentation(with responseModel: [HListProductsModel]) {
-        guard let products = responseModel.first?.products else { return }
+        guard let products = responseModel.first?.products else {
+            return
+        }
         
         horizontalListProducts = products.map { product in
-            return ProductPresentation(id: product.id,
-                                       name: product.name,
-                                       attribute: " ",
-                                       price: product.price,
-                                       imageURL: product.imageURL ?? product.squareThumbnailURL,
-                                       currentAmount: "0")
+            ProductPresentation(id: product.id, name: product.name, attribute: " ", price: product.price, imageURL: product.imageURL ?? product.squareThumbnailURL, currentAmount: "0")
         }
     }
     
     private func makeVerticalListProductPresentation(with responseModel: [VListProductModel]) {
-        guard let products = responseModel.first?.products else { return }
+        guard let products = responseModel.first?.products else {
+            return
+        }
         
         verticalListProducts = products.map { product in
-            return ProductPresentation(id: product.id,
-                                       name: product.name,
-                                       attribute: product.attribute,
-                                       price: product.price,
-                                       imageURL: product.imageURL,
-                                       currentAmount: "0")
+            ProductPresentation(id: product.id, name: product.name, attribute: product.attribute, price: product.price, imageURL: product.imageURL, currentAmount: "0")
         }
     }
 }

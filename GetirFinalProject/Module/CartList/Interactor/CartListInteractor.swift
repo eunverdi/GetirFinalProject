@@ -40,7 +40,7 @@ extension CartListInteractor: CartListInteractorProtocol {
     }
     
     func deleteProducts(productsIDs: [String]) {
-        let _ = productsIDs.map { id in
+        productsIDs.forEach { id in
             ProductRepository.shared.deleteProduct(with: id)
         }
         output?.deletedProductsInCartOutput()
@@ -51,6 +51,7 @@ extension CartListInteractor: CartListInteractorProtocol {
             switch result {
             case .success(let products):
                 self.output?.fetchProductsInCartOutput(products)
+            
             case .failure(let error):
                 print(error)
             }

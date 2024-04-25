@@ -17,7 +17,6 @@ protocol ProductDetailsViewProtocol: AnyObject {
 }
 
 final class ProductDetailsView: UIView {
-    
     var presenter: ProductDetailsViewPresenter? {
         didSet {
             presenter?.loadView()

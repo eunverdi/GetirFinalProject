@@ -13,22 +13,22 @@ public enum AlertActionType {
 }
 
 extension UIViewController {
-    func showDeletedProductAlert(title: String, message: String, completion: @escaping (AlertActionType) -> ()) {
+    func showDeletedProductAlert(title: String, message: String, completion: @escaping (AlertActionType) -> Void) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "Hayır", style: .destructive) { _ in
+        let cancel = UIAlertAction(title: "Hayır", style: .destructive) { _ in
             completion(.cancel)
         }
-        let cancel = UIAlertAction(title: "Evet", style: .default) { _ in
+        let ok = UIAlertAction(title: "Evet", style: .default) { _ in
             completion(.ok)
         }
-        alert.addAction(ok)
         alert.addAction(cancel)
+        alert.addAction(ok)
         DispatchQueue.main.async {
             self.present(alert, animated: true)
         }
     }
     
-    func showAlert(title: String, message: String, completion: @escaping () -> ()) {
+    func showAlert(title: String, message: String, completion: @escaping () -> Void) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let ok = UIAlertAction(title: "OK", style: .default) { _ in
             completion()

@@ -13,7 +13,7 @@ extension UINavigationController {
         appearance.configureWithOpaqueBackground()
         
         appearance.backgroundColor = UIColor.named(Constants.Colors.appMainColor)
-        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         
         self.navigationBar.standardAppearance = appearance
         self.navigationBar.scrollEdgeAppearance = appearance
@@ -22,5 +22,4 @@ extension UINavigationController {
         self.navigationBar.tintColor = .white
         UIBarButtonItem.appearance().tintColor = .white
     }
-    
 }

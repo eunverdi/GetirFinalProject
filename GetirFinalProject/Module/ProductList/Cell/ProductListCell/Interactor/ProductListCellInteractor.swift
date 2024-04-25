@@ -32,10 +32,14 @@ extension ProductListCellInteractor: ProductListCellInteractorProtocol {
     }
     
     func checkProductCount(productID: String) {
-        ProductRepository.shared.getProductCount(with: productID) { result in
+        ProductRepository.shared.getProductCount(with: productID) { [weak self] result in
+            guard let self = self else {
+                return
+            }
             switch result {
             case .success(let count):
                 self.output?.productCountFromCart(count: count)
+            
             case .failure(let error):
                 print(error)
             }
@@ -43,13 +47,17 @@ extension ProductListCellInteractor: ProductListCellInteractorProtocol {
     }
     
     func deleteProductToCart(product: ProductPresentation) {
-        guard let productID = product.id else { return }
+        guard let productID = product.id else {
+            return
+        }
         ProductRepository.shared.deleteProduct(with: productID)
         output?.deletedProductToCart()
     }
     
     func addProductToCart(product: ProductPresentation) {
-        guard let productID = product.id else { return }
+        guard let productID = product.id else {
+            return
+        }
         ProductRepository.shared.checkIsAddedToCart(with: productID) { [output] result in
             switch result {
             case .success(let isAdded):
@@ -57,6 +65,7 @@ extension ProductListCellInteractor: ProductListCellInteractorProtocol {
                     ProductRepository.shared.createProduct(with: product)
                     output?.addedProductToCart()
                 }
+            
             case .failure(let error):
                 print(error)
             }
@@ -68,6 +77,7 @@ extension ProductListCellInteractor: ProductListCellInteractorProtocol {
             switch result {
             case .success(let isAdded):
                 self.output?.checkIsAddedToCartOutput(isAdded: isAdded)
+            
             case .failure(let error):
                 print(error)
             }

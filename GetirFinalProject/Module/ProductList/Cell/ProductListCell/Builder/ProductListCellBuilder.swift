@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ProductListCellBuilder {
+enum ProductListCellBuilder {
     static func createCell(_ cell: ProductListCell, presentation: ProductPresentation) {
         let interactor = ProductListCellInteractor()
         let presenter = ProductListCellPresenter(cell: cell, presentation: presentation, interactor: interactor)

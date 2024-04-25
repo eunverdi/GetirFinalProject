@@ -26,15 +26,7 @@ final class ProductListCell: UICollectionViewCell {
             presenter?.loadCell()
         }
     }
-    
-    private lazy var expandableButtonView: ExpandableButtonView = {
-        let view = ExpandableButtonView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.delegate = self
-        view.layer.zPosition = 1
-        return view
-    }()
-    
+
     private let productNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -92,38 +84,121 @@ final class ProductListCell: UICollectionViewCell {
         return mainStackView
     }()
     
-    @objc private func addTapped() {
-        presenter?.addButtonTapped()
-    }
+    private lazy var addToCartButton: UIButton = {
+        let addButton = UIButton(type: .system)
+        let addButtonImage = UIImage.named(Constants.ImageName.plusButtonIcon)
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        addButton.setImage(addButtonImage, for: .normal)
+        addButton.backgroundColor = .white
+        addButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
+        addButton.layer.cornerRadius = 10
+        addButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        addButton.layer.shadowColor = UIColor.black.cgColor
+        addButton.layer.shadowOpacity = 0.10
+        addButton.layer.zPosition = 1
+        addButton.layer.shadowOffset = CGSize(width: 0, height: -1)
+        addButton.layer.shadowRadius = 10
+        addButton.layer.masksToBounds = false
+        addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
+        return addButton
+    }()
     
-    private func updateCount(count: String) {
-        presenter?.updateCount(with: count)
-    }
+    private lazy var incrementButton: UIButton = {
+        let addButton = UIButton(type: .system)
+        let addButtonImage = UIImage.named(Constants.ImageName.plusButtonIcon)
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        addButton.setImage(addButtonImage, for: .normal)
+        addButton.backgroundColor = .white
+        addButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
+        addButton.layer.cornerRadius = 10
+        addButton.isHidden = true
+        addButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
+        return addButton
+    }()
     
-    @objc private func deleteTapped() {
-        presenter?.deleteButtonTapped()
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
+    private lazy var containerStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.layer.cornerRadius = 10
+        stackView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        stackView.layer.shadowColor = UIColor.black.cgColor
+        stackView.layer.shadowOpacity = 0.10
+        stackView.layer.zPosition = 2
+        stackView.layer.shadowOffset = CGSize(width: 0, height: -1)
+        stackView.layer.shadowRadius = 10
+        stackView.layer.masksToBounds = false
+        stackView.isHidden = true
+        stackView.addArrangedSubview(incrementButton)
+        stackView.addArrangedSubview(expandedStackView)
+        return stackView
+    }()
+    
+    private lazy var expandedStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.isHidden = true
+        stackView.addArrangedSubview(countLabel)
+        stackView.addArrangedSubview(decrementButton)
+        return stackView
+    }()
+    
+    lazy var countLabel: UILabel = {
+        let countLabel = UILabel()
+        countLabel.translatesAutoresizingMaskIntoConstraints = false
+        countLabel.textAlignment = .center
+        countLabel.text = "0"
+        countLabel.backgroundColor = UIColor.named(Constants.Colors.appMainColor)
+        countLabel.font = UIFont(name: Constants.Fonts.openSansBold, size: 12)
+        countLabel.textColor = .white
+        countLabel.isHidden = true
+        return countLabel
+    }()
+    
+    private lazy var decrementButton: UIButton = {
+        let decrementButton = UIButton(type: .system)
+        let decrementButtonImage = UIImage.named(Constants.ImageName.trashButtonIcon)
+        decrementButton.translatesAutoresizingMaskIntoConstraints = false
+        decrementButton.setImage(decrementButtonImage, for: .normal)
+        decrementButton.tintColor = UIColor.named(Constants.Colors.appMainColor)
+        decrementButton.isHidden = true
+        decrementButton.backgroundColor = .white
+        decrementButton.layer.cornerRadius = 10
+        decrementButton.tag = 1
+        decrementButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        decrementButton.addTarget(self, action: #selector(decrementButtonPressed(_ :)), for: .touchUpInside)
+        return decrementButton
+    }()
     
     override func prepareForReuse() {
+        super.prepareForReuse()
         productNameLabel.text = nil
         productPriceLabel.text = nil
         productAttributeLabel.text = nil
         productImageView.image = nil
-        productImageView.layer.borderColor = UIColor.named(Constants.Colors.productImageBorderColor).cgColor
+        countLabel.text = "0"
         productImageView.layer.sublayers?.removeAll()
-        expandableButtonView.isExpanded = false
+        productImageView.layer.borderColor = UIColor.named(Constants.Colors.sectionHeaderColor).cgColor
+        decrementButton.tag = 1
+        decrementButton.setImage(UIImage.named(Constants.ImageName.trashButtonIcon), for: .normal)
     }
 }
 
 extension ProductListCell: ProductListCellProtocol {
     func configureAddedProductsCount(count: String) {
-        let value = Int(count)!
+        guard let value = Int(count) else {
+            return
+        }
         if value >= 1 {
-            self.expandableButtonView.countLabel.text = "\(value)"
+            self.addToCartButton.isHidden = false
+            self.countLabel.text = "\(count)"
+            self.decrementButton.setImage(UIImage.named(Constants.ImageName.minusButtonIcon), for: .normal)
+            self.decrementButton.tag = 2
+            if value == 1 {
+                self.decrementButton.setImage(UIImage.named(Constants.ImageName.trashButtonIcon), for: .normal)
+                self.decrementButton.tag = 1
+            }
         }
     }
     
@@ -138,7 +213,8 @@ extension ProductListCell: ProductListCellProtocol {
         mainStackView.addArrangedSubview(labelsStackView)
         
         addSubview(mainStackView)
-        addSubview(expandableButtonView)
+        addSubview(addToCartButton)
+        addSubview(containerStackView)
 
         setConstraints()
     }
@@ -146,7 +222,18 @@ extension ProductListCell: ProductListCellProtocol {
     func configureProductAddedCartStatus(isAdded: Bool) {
         if isAdded {
             self.productImageView.layer.borderColor = UIColor.named(Constants.Colors.appMainColor).cgColor
-            self.expandableButtonView.isExpanded = true
+            self.incrementButton.isHidden = false
+            self.decrementButton.isHidden = false
+            self.countLabel.isHidden = false
+            self.containerStackView.isHidden = false
+            self.expandedStackView.isHidden = false
+        } else {
+            self.productImageView.layer.borderColor = UIColor.named(Constants.Colors.productImageBorderColor).cgColor
+            self.productImageView.layer.sublayers?.removeAll()
+            self.decrementButton.isHidden = true
+            self.countLabel.isHidden = true
+            self.containerStackView.isHidden = true
+            self.expandedStackView.isHidden = true
         }
     }
     
@@ -195,9 +282,23 @@ extension ProductListCell {
             
             productImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
             
-            expandableButtonView.widthAnchor.constraint(equalToConstant: 32),
-            expandableButtonView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            expandableButtonView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -3),
+            addToCartButton.widthAnchor.constraint(equalToConstant: 32),
+            addToCartButton.heightAnchor.constraint(equalToConstant: 32),
+            addToCartButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            addToCartButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -3),
+            
+            incrementButton.widthAnchor.constraint(equalToConstant: 32),
+            incrementButton.heightAnchor.constraint(equalToConstant: 32),
+            
+            countLabel.widthAnchor.constraint(equalToConstant: 32),
+            countLabel.heightAnchor.constraint(equalToConstant: 32),
+            
+            decrementButton.widthAnchor.constraint(equalToConstant: 32),
+            decrementButton.heightAnchor.constraint(equalToConstant: 32),
+            
+            containerStackView.widthAnchor.constraint(equalToConstant: 32),
+            containerStackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -3)
         ])
     }
 }
@@ -207,8 +308,7 @@ extension ProductListCell {
         let borderLayer = CAShapeLayer()
         borderLayer.strokeColor = UIColor.named(Constants.Colors.appMainColor).cgColor
         borderLayer.fillColor = nil
-        borderLayer.path = UIBezierPath(roundedRect: productImageView.frame,
-                                        cornerRadius: productImageView.layer.cornerRadius).cgPath
+        borderLayer.path = UIBezierPath(roundedRect: productImageView.frame, cornerRadius: productImageView.layer.cornerRadius).cgPath
         borderLayer.lineWidth = 1.5
         
         let animation = CABasicAnimation(keyPath: "strokeEnd")
@@ -221,16 +321,55 @@ extension ProductListCell {
     }
 }
 
-extension ProductListCell: ExpandableButtonViewProtocol {
-    func updateProductCount(with count: String) {
-        updateCount(count: count)
+extension ProductListCell {
+    @objc private func addButtonPressed() {
+        guard let countLabelText = self.countLabel.text, var countLabelIntValue = Int(countLabelText) else {
+            return
+        }
+  
+        if countLabelIntValue >= 1 {
+            self.decrementButton.setImage(UIImage.named(Constants.ImageName.minusButtonIcon), for: .normal)
+            self.decrementButton.tag = 2
+        }
+        
+        if countLabelIntValue == 0 {
+            self.decrementButton.isHidden = false
+            self.countLabel.isHidden = false
+            self.containerStackView.isHidden = false
+            self.expandedStackView.isHidden = false
+            self.incrementButton.isHidden = false
+            presenter?.addButtonTapped()
+        }
+        
+        countLabelIntValue += 1
+        self.countLabel.text = "\(countLabelIntValue)"
+        presenter?.updateCount(with: "\(countLabelIntValue)")
     }
-    
-    func addProductToBasket() {
-        addTapped()
-    }
-    
-    func deleteProductFromBasket() {
-        deleteTapped()
+}
+
+extension ProductListCell {
+    @objc private func decrementButtonPressed(_ sender: UIButton) {
+        if sender.tag == 1 {
+            self.decrementButton.isHidden = true
+            self.countLabel.isHidden = true
+            self.containerStackView.isHidden = true
+            self.expandedStackView.isHidden = true
+            self.incrementButton.isHidden = true
+            self.countLabel.text = "0"
+            presenter?.deleteButtonTapped()
+        } else {
+            guard let countLabelText = self.countLabel.text, var countLabelIntValue = Int(countLabelText) else {
+                return
+            }
+            
+            countLabelIntValue -= 1
+            self.countLabel.text = "\(countLabelIntValue)"
+            presenter?.updateCount(with: "\(countLabelIntValue)")
+            
+            if countLabelIntValue == 1 {
+                self.decrementButton.setImage(UIImage.named(Constants.ImageName.trashButtonIcon), for: .normal)
+                self.decrementButton.tag = 1
+            }
+        }
     }
 }

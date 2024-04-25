@@ -8,7 +8,7 @@
 import UIKit
 
 final class HeaderView: UICollectionReusableView {
-    static let reuseIdentifier = Identifier.sectionHeaderIdentifier.rawValue
+    static let reuseIdentifier = Constants.Identifier.sectionHeaderIdentifier
 
     private let label: UILabel = {
         let label = UILabel()

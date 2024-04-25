@@ -14,7 +14,6 @@ protocol APINetworkable {
 }
 
 final class NetworkManager: APINetworkable {
-
     private var provider: MoyaProvider<APIEndpoint> = MoyaProvider<APIEndpoint>()
     public init() {}
     

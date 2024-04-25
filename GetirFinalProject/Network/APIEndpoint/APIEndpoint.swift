@@ -23,6 +23,7 @@ extension APIEndpoint: TargetType {
         switch self {
         case .getVerticalListProducts:
             return Constants.Network.productsEndpoint
+        
         case .getHorizontalListProducts:
             return Constants.Network.suggestedProductsEndpoint
         }
@@ -43,6 +44,6 @@ extension APIEndpoint: TargetType {
     }
     
     var headers: [String: String]? {
-        nil
+        [:]
     }
 }

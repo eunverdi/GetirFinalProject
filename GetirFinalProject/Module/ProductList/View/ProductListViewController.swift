@@ -7,10 +7,6 @@
 
 import UIKit
 
-public enum Identifier: String {
-    case sectionHeaderIdentifier = "HeaderView"
-}
-
 enum Section: Int, CaseIterable {
     case horizontalListProducts
     case verticalListProducts
@@ -23,7 +19,7 @@ protocol ProductListViewControllerProtocol: AnyObject {
 
 final class ProductListViewController: UIViewController {
     var presenter: ProductListPresenterProtocol?
-    private var collectionView: UICollectionView? = nil
+    private var collectionView: UICollectionView?
     private let cartButton = CartButtonView()
     
     override func viewDidLoad() {
@@ -64,28 +60,31 @@ extension ProductListViewController {
     
     private func configureNavigationBar() {
         navigationItem.title = Constants.NavigationItem.productListTitle
-        let font = UIFont(name: Constants.Fonts.openSansBold, size: 14)
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: font]
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cartButton)
+        if let font = UIFont(name: Constants.Fonts.openSansBold, size: 14) {
+            navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: font]
+        }
     }
     
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         
-        guard let collectionView = collectionView else { return }
+        guard let collectionView = collectionView else {
+            return
+        }
         
         collectionView.register(ProductListCell.self)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(UICollectionReusableView.self,
-                                forSupplementaryViewOfKind: Identifier.sectionHeaderIdentifier.rawValue,
-                                withReuseIdentifier: Identifier.sectionHeaderIdentifier.rawValue)
+        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: Constants.Identifier.sectionHeaderIdentifier, withReuseIdentifier: Constants.Identifier.sectionHeaderIdentifier)
         view.addSubview(collectionView)
     }
     
     private func setConstraints() {
-        guard let collectionView = collectionView else { return }
+        guard let collectionView = collectionView else {
+            return
+        }
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -110,7 +109,7 @@ extension ProductListViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Identifier.sectionHeaderIdentifier.rawValue, for: indexPath)
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.Identifier.sectionHeaderIdentifier, for: indexPath)
         header.backgroundColor = UIColor.named(Constants.Colors.sectionHeaderColor)
         return header
     }
@@ -122,6 +121,7 @@ extension ProductListViewController: UICollectionViewDataSource {
         switch section {
         case .horizontalListProducts:
             return presenter.numberOfRowsInSectionHorizontalListProducts()
+        
         case .verticalListProducts:
             return presenter.numberOfRowsInSectionVerticalListProducts()
         }
@@ -154,12 +154,13 @@ extension ProductListViewController: UICollectionViewDataSource {
 
 extension ProductListViewController {
     private func createLayout() -> UICollectionViewCompositionalLayout {
-        UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+        UICollectionViewCompositionalLayout { sectionIndex, _ in
             let section = Section.allCases[sectionIndex]
             switch section {
             case .horizontalListProducts:
                 let horizontalListLayout = self.makeHorizontalListLayout()
                 return horizontalListLayout
+            
             case .verticalListProducts:
                 let verticalListLayout = self.makeVerticalListLayout()
                 return verticalListLayout
@@ -174,17 +175,14 @@ extension ProductListViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
         
-        let groupHeight = NSCollectionLayoutDimension.fractionalWidth(1.05/2)
+        let groupHeight = NSCollectionLayoutDimension.fractionalWidth(1.05 / 2)
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: groupHeight)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
         
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 10, trailing: 3)
         
-        section.boundarySupplementaryItems = [
-            .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16)),
-                  elementKind: Identifier.sectionHeaderIdentifier.rawValue, alignment: .top)
-        ]
+        section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16)), elementKind: Constants.Identifier.sectionHeaderIdentifier, alignment: .top)]
         return section
     }
 }
@@ -192,16 +190,13 @@ extension ProductListViewController {
 extension ProductListViewController {
     private func makeHorizontalListLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1.2/4), heightDimension: .fractionalWidth(1.5/3)), subitems: [item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1.2 / 4), heightDimension: .fractionalWidth(1.5 / 3)), subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         
         section.interGroupSpacing = 0
         section.orthogonalScrollingBehavior = .continuous
         section.contentInsets = .init(top: 0, leading: 5, bottom: 0, trailing: 3)
-        section.boundarySupplementaryItems = [
-            .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16)),
-                  elementKind: Identifier.sectionHeaderIdentifier.rawValue, alignment: .top),
-        ]
+        section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16)), elementKind: Constants.Identifier.sectionHeaderIdentifier, alignment: .top)]
         return section
     }
 }
